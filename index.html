@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataPulse Analytics | Система прогнозирования продаж</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='static.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Сайдбар -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-chart-line logo-icon"></i>
+                <div class="logo-text">DataPulse</div>
+            </div>
+            <div class="nav-list">
+                <a class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Дашборд</span>
+                </a>
+                <a class="nav-item" data-section="data">
+                    <i class="fas fa-database"></i>
+                    <span>Данные</span>
+                </a>
+                <a class="nav-item" data-section="forecast">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Прогнозы</span>
+                </a>
+                <a class="nav-item" data-section="reports">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Отчеты</span>
+                </a>
+                <a class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Настройки</span>
+                </a>
+            </div>
+        </div>
+        <!-- Основное содержимое -->
+        <div class="main-content">
+            <!-- Дашборд -->
+            <div class="section active" id="dashboard-section">
+                <div class="header">
+                    <h1 class="page-title">Дашборд</h1>
+                    <button class="upload-btn" id="upload-csv-btn">
+                        <i class="fas fa-upload"></i>
+                        Загрузить CSV
+                    </button>
+                </div>
+                <!-- Карточки с метриками -->
+                <div class="kpi-cards">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Всего записей</div>
+                            <div class="kpi-icon blue">
+                                <i class="fas fa-database"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="total-records">0</div>
+                        <div class="kpi-trend" id="records-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>Загрузка...</span>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Точность прогноза</div>
+                            <div class="kpi-icon orange">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="forecast-accuracy">0%</div>
+                        <div class="kpi-trend" id="accuracy-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>Загрузка...</span>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Средние продажи/день</div>
+                            <div class="kpi-icon green">
+                                <i class="fas fa-trending-up"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="avg-sales">$0</div>
+                        <div class="kpi-trend" id="sales-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>Загрузка...</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- График и последние действия -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Динамика продаж за последние 30 дней</h2>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary" id="refresh-chart">
+                                <i class="fas fa-sync"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Последние действия</h2>
+                    </div>
+                    <table class="data-table" id="activity-table">
+                        <thead>
+                            <tr>
+                                <th>Действие</th>
+                                <th>Дата</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" style="text-align: center;">Загрузка данных...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Данные -->
+            <div class="section" id="data-section">
+                <div class="header">
+                    <h1 class="page-title">Управление данными</h1>
+                    <div class="card-actions">
+                        <button class="btn btn-accent" id="create-test-data">
+                            <i class="fas fa-plus"></i>
+                            Создать тестовые данные
+                        </button>
+                        <button class="upload-btn" id="upload-data-btn">
+                            <i class="fas fa-upload"></i>
+                            Загрузить CSV
+                        </button>
+                    </div>
+                </div>
+                <div class="upload-area" id="drop-zone">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">
+                        Перетащите CSV файл сюда или нажмите для выбора
+                    </div>
+                    <input type="file" id="file-input" accept=".csv" style="display: none;">
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Загруженные данные</h2>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" id="refresh-data">
+                                <i class="fas fa-sync"></i>
+                                Обновить
+                            </button>
+                            <button class="btn btn-danger" id="clear-data-btn">
+                                <i class="fas fa-trash"></i>
+                                Очистить данные
+                            </button>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table" id="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Общие продажи</th>
+                                    <th>День недели</th>
+                                    <th>Месяц</th>
+                                    <th>Праздничный день</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">Загрузка данных...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Прогнозы -->
+            <div class="section" id="forecast-section">
+                <div class="header">
+                    <h1 class="page-title">Прогнозы продаж</h1>
+                    <button class="upload-btn" id="run-forecast-btn">
+                        <i class="fas fa-calculator"></i>
+                        Рассчитать прогноз
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Прогноз продаж на 7 дней</h2>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" id="export-forecast">
+                                <i class="fas fa-download"></i>
+                                Экспорт
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Детали прогноза</h2>
+                    </div>
+                    <table class="data-table" id="forecast-table">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Прогнозируемые продажи</th>
+                                <th>Доверительный интервал</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" style="text-align: center;">Прогноз не выполнен</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Отчеты -->
+            <div class="section" id="reports-section">
+                <div class="header">
+                    <h1 class="page-title">Отчеты</h1>
+                    <button class="upload-btn" id="generate-report-btn">
+                        <i class="fas fa-file-pdf"></i>
+                        Сгенерировать отчет
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Доступные отчеты</h2>
+                    </div>
+                    <div class="reports-grid">
+                        <div class="report-card">
+                            <div class="report-preview">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="report-content">
+                                <div class="report-name">Отчет по продажам</div>
+                                <div class="report-date">Содержит исторические данные</div>
+                                <div class="report-actions">
+                                    <button class="btn btn-primary" onclick="generateReport('sales')">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="report-card">
+                            <div class="report-preview">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="report-content">
+                                <div class="report-name">Прогноз продаж</div>
+                                <div class="report-date">Прогноз на 7 дней</div>
+                                <div class="report-actions">
+                                    <button class="btn btn-primary" onclick="generateReport('forecast')">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Настройки -->
+            <div class="section" id="settings-section">
+                <div class="header">
+                    <h1 class="page-title">Настройки системы</h1>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Статус системы</h2>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div class="setting-group">
+                            <label class="setting-label">Статус базы данных</label>
+                            <div id="db-status" class="kpi-trend">Проверка...</div>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">Количество записей</label>
+                            <div id="db-records" class="kpi-value">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Глобальные переменные для хранения данных
+        let salesData = [];
+        let forecastData = [];
+        let activityLog = [];
+
+        // Навигация между разделами
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function () {
+                document.querySelectorAll('.nav-item').forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                this.classList.add('active');
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                const sectionId = this.getAttribute('data-section');
+                document.getElementById(`${sectionId}-section`).classList.add('active');
+                
+                // Загружаем данные при переключении разделов
+                if (sectionId === 'dashboard') {
+                    loadDashboardData();
+                } else if (sectionId === 'data') {
+                    loadDataTable();
+                } else if (sectionId === 'forecast') {
+                    loadForecastData();
+                }
+            });
+        });
+
+        // Загрузка файла
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--primary)';
+            dropZone.style.backgroundColor = '#f8fafc';
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.borderColor = 'var(--border)';
+            dropZone.style.backgroundColor = 'transparent';
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--border)';
+            dropZone.style.backgroundColor = 'transparent';
+            if (e.dataTransfer.files.length) {
+                handleFileUpload(e.dataTransfer.files[0]);
+            }
+        });
+        
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) {
+                handleFileUpload(fileInput.files[0]);
+            }
+        });
+
+        // Обработка загрузки файла
+        async function handleFileUpload(file) {
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                alert('Пожалуйста, выберите CSV файл');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                showLoading('Загрузка файла...');
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert(`Файл успешно загружен! Обработано ${result.rows} записей`);
+                    loadDashboardData();
+                    loadDataTable();
+                } else {
+                    alert(`Ошибка: ${result.error}`);
+                }
+            } catch (error) {
+                alert('Ошибка при загрузке файла');
+                console.error('Upload error:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Загрузка данных дашборда
+        async function loadDashboardData() {
+            try {
+                showLoading('Загрузка данных...');
+                
+                // Загружаем данные
+                const [dataResponse, forecastResponse] = await Promise.all([
+                    fetch('/api/data/processed'),
+                    fetch('/api/data/raw')
+                ]);
+
+                if (dataResponse.ok) {
+                    salesData = await dataResponse.json();
+                    updateDashboardMetrics(salesData);
+                    updateSalesChart(salesData);
+                }
+
+                // Загружаем историю действий
+                updateActivityLog();
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Обновление метрик дашборда
+        function updateDashboardMetrics(data) {
+            // Всего записей
+            document.getElementById('total-records').textContent = data.length;
+            
+            // Средние продажи
+            const totalSales = data.reduce((sum, item) => sum + (item.total_sales || 0), 0);
+            const avgSales = data.length > 0 ? totalSales / data.length : 0;
+            document.getElementById('avg-sales').textContent = `$${avgSales.toFixed(2)}`;
+            
+            // Тренды
+            if (data.length >= 2) {
+                const recentSales = data.slice(-7).reduce((sum, item) => sum + (item.total_sales || 0), 0);
+                const previousSales = data.slice(-14, -7).reduce((sum, item) => sum + (item.total_sales || 0), 0);
+                const trend = previousSales > 0 ? ((recentSales - previousSales) / previousSales) * 100 : 0;
+                
+                const trendElement = document.getElementById('sales-trend');
+                trendElement.innerHTML = trend >= 0 ? 
+                    `<i class="fas fa-arrow-up"></i><span>+${trend.toFixed(1)}% за неделю</span>` :
+                    `<i class="fas fa-arrow-down"></i><span>${trend.toFixed(1)}% за неделю</span>`;
+                
+                trendElement.className = trend >= 0 ? 'kpi-trend' : 'kpi-trend down';
+            }
+        }
+
+        // Загрузка таблицы данных
+        async function loadDataTable() {
+            try {
+                const response = await fetch('/api/data/processed');
+                if (response.ok) {
+                    const data = await response.json();
+                    updateDataTable(data.slice(-10).reverse()); // Последние 10 записей
+                }
+            } catch (error) {
+                console.error('Error loading data table:', error);
+            }
+        }
+
+        // Обновление таблицы данных
+        function updateDataTable(data) {
+            const tableBody = document.querySelector('#data-table tbody');
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Нет данных</td></tr>';
+                return;
+            }
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.date}</td>
+                    <td>$${(item.total_sales || 0).toFixed(2)}</td>
+                    <td>${getDayOfWeekName(item.day_of_week)}</td>
+                    <td>${item.month}</td>
+                    <td>${item.is_holiday ? 'Да' : 'Нет'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Загрузка данных прогноза
+        async function loadForecastData() {
+            try {
+                const response = await fetch('/api/forecast', {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    forecastData = result.predictions || [];
+                    updateForecastChart(forecastData);
+                    updateForecastTable(forecastData);
+                    
+                    // Обновляем точность прогноза
+                    document.getElementById('forecast-accuracy').textContent = 
+                        result.accuracy ? `${(result.accuracy * 100).toFixed(1)}%` : 'N/A';
+                }
+            } catch (error) {
+                console.error('Error loading forecast data:', error);
+            }
+        }
+
+        // Обновление лога действий
+        function updateActivityLog() {
+            const log = [
+                { action: 'Система запущена', date: new Date().toLocaleString(), status: 'Успешно' },
+                { action: 'Загрузка данных', date: new Date().toLocaleString(), status: 'Завершено' }
+            ];
+            
+            const tableBody = document.querySelector('#activity-table tbody');
+            tableBody.innerHTML = '';
+            
+            log.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.action}</td>
+                    <td>${item.date}</td>
+                    <td>${item.status}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Вспомогательные функции
+        function getDayOfWeekName(dayNumber) {
+            const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+            return days[dayNumber] || 'Н/Д';
+        }
+
+        function showLoading(message) {
+            // Реализуйте отображение индикатора загрузки
+            console.log(message);
+        }
+
+        function hideLoading() {
+            // Реализуйте скрытие индикатора загрузки
+        }
+
+        // Обработчики кнопок
+        document.getElementById('refresh-data').addEventListener('click', loadDataTable);
+        document.getElementById('refresh-chart').addEventListener('click', loadDashboardData);
+        document.getElementById('run-forecast-btn').addEventListener('click', loadForecastData);
+        document.getElementById('clear-data-btn').addEventListener('click', clearData);
+        document.getElementById('create-test-data').addEventListener('click', createTestData);
+        document.getElementById('generate-report-btn').addEventListener('click', generateReport);
+
+        // Функции для кнопок
+        async function clearData() {
+            if (confirm('Вы уверены, что хотите очистить все данные?')) {
+                try {
+                    const response = await fetch('/api/data/clear');
+                    if (response.ok) {
+                        alert('Данные успешно очищены');
+                        loadDashboardData();
+                        loadDataTable();
+                    }
+                } catch (error) {
+                    alert('Ошибка при очистке данных');
+                }
+            }
+        }
+
+        async function createTestData() {
+            try {
+                showLoading('Создание тестовых данных...');
+                const response = await fetch('/api/data/create_extended');
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert(result.message);
+                    loadDashboardData();
+                    loadDataTable();
+                } else {
+                    alert(`Ошибка: ${result.error}`);
+                }
+            } catch (error) {
+                alert('Ошибка при создании тестовых данных');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function generateReport(type) {
+            try {
+                const response = await fetch('/api/report/generate');
+                if (response.ok) {
+                    // Скачивание файла
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'sales_forecast_report.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                }
+            } catch (error) {
+                alert('Ошибка при генерации отчета');
+            }
+        }
+
+        // Инициализация графиков
+        let salesChart = null;
+        let forecastChart = null;
+
+        function updateSalesChart(data) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            if (salesChart) {
+                salesChart.destroy();
+            }
+            
+            const labels = data.map(item => item.date.substring(0, 10));
+            const sales = data.map(item => item.total_sales || 0);
+            
+            salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Продажи',
+                        data: sales,
+                        borderColor: '#2563EB',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateForecastChart(data) {
+            const ctx = document.getElementById('forecastChart').getContext('2d');
+            
+            if (forecastChart) {
+                forecastChart.destroy();
+            }
+            
+            const labels = data.map(item => item.date);
+            const predictions = data.map(item => item.predicted_sales);
+            
+            forecastChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Прогноз продаж',
+                        data: predictions,
+                        borderColor: '#F97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateForecastTable(data) {
+            const tableBody = document.querySelector('#forecast-table tbody');
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Нет данных прогноза</td></tr>';
+                return;
+            }
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.date}</td>
+                    <td>$${item.predicted_sales.toFixed(2)}</td>
+                    <td>±20%</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboardData();
+        });
+    </script>
+</body>
+</html>
