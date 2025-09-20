@@ -1,9 +1,5 @@
-# utils/data_processor.py
 import pandas as pd
-from sqlalchemy import text
 import os
-
-# Добавьте путь к корневой директории проекта
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 

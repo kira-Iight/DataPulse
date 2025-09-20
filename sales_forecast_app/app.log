@@ -1539,3 +1539,204 @@ LINE 1: ...) VALUES ('2025-09-17'::date, '2024-03-31'::date, np.float64...
 2025-09-19 22:04:53.095 | INFO     | __main__:get_processed_data:166 - Запрос обработанных данных
 2025-09-19 22:04:53.997 | INFO     | __main__:get_processed_data:166 - Запрос обработанных данных
 2025-09-19 22:04:54.004 | INFO     | __main__:get_raw_data:154 - Запрос сырых данных
+2025-09-20 21:09:41.527 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:09:42.030 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:10:03.058 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:10:03.059 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:10:06.504 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:10:18.322 | INFO     | __main__:upload_file:90 - Получен запрос на загрузку файла
+2025-09-20 21:10:18.992 | INFO     | __main__:upload_file:105 - Файл сохранен: uploads/20250920_211018_sales_data.csv
+2025-09-20 21:10:19.037 | INFO     | __main__:upload_file:109 - Загружено 76 строк сырых данных
+2025-09-20 21:10:19.056 | INFO     | __main__:upload_file:114 - Обработано 36 строк
+2025-09-20 21:10:19.057 | INFO     | __main__:upload_file:116 - Данные успешно сохранены в сессии
+2025-09-20 21:10:20.859 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:10:20.864 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:10:20.872 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:10:27.055 | INFO     | __main__:run_forecast:154 - Запрос на запуск прогнозирования
+2025-09-20 21:10:32.400 | INFO     | utils.ml_model:train_model:39 - Загрузка данных для обучения модели...
+2025-09-20 21:10:32.406 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:10:32.408 | INFO     | utils.ml_model:train_model:58 - Обучение модели RandomForest...
+2025-09-20 21:10:32.490 | INFO     | utils.ml_model:train_model:66 - ✅ Модель обучена!
+2025-09-20 21:10:32.490 | INFO     | utils.ml_model:train_model:67 -    MAE: 843.82
+2025-09-20 21:10:32.490 | INFO     | utils.ml_model:train_model:68 -    MAPE: 47.87%
+2025-09-20 21:10:32.490 | INFO     | utils.ml_model:train_model:69 -    Обучено на 4 записях
+2025-09-20 21:10:32.490 | INFO     | utils.ml_model:train_model:70 -    Протестировано на 2 записях
+2025-09-20 21:10:32.490 | INFO     | utils.ml_model:train_model:82 - Точность модели сохранена: 47.87%
+2025-09-20 21:10:32.495 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:10:32.521 | INFO     | __main__:run_forecast:154 - Запрос на запуск прогнозирования
+2025-09-20 21:10:32.523 | INFO     | utils.ml_model:train_model:39 - Загрузка данных для обучения модели...
+2025-09-20 21:10:32.534 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:10:32.531 | INFO     | utils.ml_model:make_predictions:142 - ✅ Создано 7 прогнозов
+2025-09-20 21:10:32.536 | INFO     | __main__:run_forecast:165 - Прогноз успешно выполнен
+2025-09-20 21:10:32.535 | INFO     | utils.ml_model:train_model:58 - Обучение модели RandomForest...
+2025-09-20 21:10:32.622 | INFO     | utils.ml_model:train_model:66 - ✅ Модель обучена!
+2025-09-20 21:10:32.622 | INFO     | utils.ml_model:train_model:67 -    MAE: 843.82
+2025-09-20 21:10:32.622 | INFO     | utils.ml_model:train_model:68 -    MAPE: 47.87%
+2025-09-20 21:10:32.622 | INFO     | utils.ml_model:train_model:69 -    Обучено на 4 записях
+2025-09-20 21:10:32.622 | INFO     | utils.ml_model:train_model:70 -    Протестировано на 2 записях
+2025-09-20 21:10:32.622 | INFO     | utils.ml_model:train_model:82 - Точность модели сохранена: 47.87%
+2025-09-20 21:10:32.625 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:10:32.650 | INFO     | utils.ml_model:make_predictions:142 - ✅ Создано 7 прогнозов
+2025-09-20 21:10:32.650 | INFO     | __main__:run_forecast:165 - Прогноз успешно выполнен
+2025-09-20 21:10:38.145 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:10:38.149 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:10:44.921 | INFO     | __main__:generate_sales_report:215 - Запрос на генерацию отчета по продажам
+2025-09-20 21:11:16.284 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:11:16.810 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:11:19.967 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:11:19.968 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:11:21.705 | INFO     | __main__:run_forecast:154 - Запрос на запуск прогнозирования
+2025-09-20 21:11:23.002 | INFO     | utils.ml_model:train_model:39 - Загрузка данных для обучения модели...
+2025-09-20 21:11:23.017 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:11:23.018 | INFO     | utils.ml_model:train_model:58 - Обучение модели RandomForest...
+2025-09-20 21:11:23.077 | INFO     | utils.ml_model:train_model:66 - ✅ Модель обучена!
+2025-09-20 21:11:23.077 | INFO     | utils.ml_model:train_model:67 -    MAE: 843.82
+2025-09-20 21:11:23.077 | INFO     | utils.ml_model:train_model:68 -    MAPE: 47.87%
+2025-09-20 21:11:23.077 | INFO     | utils.ml_model:train_model:69 -    Обучено на 4 записях
+2025-09-20 21:11:23.077 | INFO     | utils.ml_model:train_model:70 -    Протестировано на 2 записях
+2025-09-20 21:11:23.077 | INFO     | utils.ml_model:train_model:82 - Точность модели сохранена: 47.87%
+2025-09-20 21:11:23.080 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:11:23.102 | INFO     | utils.ml_model:make_predictions:142 - ✅ Создано 7 прогнозов
+2025-09-20 21:11:23.102 | INFO     | __main__:run_forecast:165 - Прогноз успешно выполнен
+2025-09-20 21:11:23.754 | INFO     | __main__:generate_sales_report:215 - Запрос на генерацию отчета по продажам
+2025-09-20 21:15:36.531 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:15:37.023 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:15:41.224 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:15:41.227 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:15:45.989 | INFO     | __main__:generate_sales_report:215 - Запрос на генерацию отчета по продажам
+2025-09-20 21:16:44.989 | INFO     | __main__:generate_forecast_report:238 - Запрос на генерацию отчета по прогнозам
+2025-09-20 21:20:14.203 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:20:15.773 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:21:38.022 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:21:38.517 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:21:51.855 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:21:51.859 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:22:01.254 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:22:02.702 | INFO     | __main__:run_forecast:154 - Запрос на запуск прогнозирования
+2025-09-20 21:22:03.994 | INFO     | utils.ml_model:train_model:39 - Загрузка данных для обучения модели...
+2025-09-20 21:22:04.010 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:22:04.011 | INFO     | utils.ml_model:train_model:58 - Обучение модели RandomForest...
+2025-09-20 21:22:04.076 | INFO     | utils.ml_model:train_model:66 - ✅ Модель обучена!
+2025-09-20 21:22:04.076 | INFO     | utils.ml_model:train_model:67 -    MAE: 843.82
+2025-09-20 21:22:04.076 | INFO     | utils.ml_model:train_model:68 -    MAPE: 47.87%
+2025-09-20 21:22:04.076 | INFO     | utils.ml_model:train_model:69 -    Обучено на 4 записях
+2025-09-20 21:22:04.076 | INFO     | utils.ml_model:train_model:70 -    Протестировано на 2 записях
+2025-09-20 21:22:04.076 | INFO     | utils.ml_model:train_model:82 - Точность модели сохранена: 47.87%
+2025-09-20 21:22:04.080 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:22:04.104 | INFO     | utils.ml_model:make_predictions:142 - ✅ Создано 7 прогнозов
+2025-09-20 21:22:04.104 | INFO     | __main__:run_forecast:165 - Прогноз успешно выполнен
+2025-09-20 21:22:08.736 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:22:08.742 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:22:10.269 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:22:10.987 | INFO     | __main__:run_forecast:154 - Запрос на запуск прогнозирования
+2025-09-20 21:22:10.987 | INFO     | utils.ml_model:train_model:39 - Загрузка данных для обучения модели...
+2025-09-20 21:22:10.994 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:22:10.996 | INFO     | utils.ml_model:train_model:58 - Обучение модели RandomForest...
+2025-09-20 21:22:11.060 | INFO     | utils.ml_model:train_model:66 - ✅ Модель обучена!
+2025-09-20 21:22:11.060 | INFO     | utils.ml_model:train_model:67 -    MAE: 843.82
+2025-09-20 21:22:11.060 | INFO     | utils.ml_model:train_model:68 -    MAPE: 47.87%
+2025-09-20 21:22:11.060 | INFO     | utils.ml_model:train_model:69 -    Обучено на 4 записях
+2025-09-20 21:22:11.060 | INFO     | utils.ml_model:train_model:70 -    Протестировано на 2 записях
+2025-09-20 21:22:11.060 | INFO     | utils.ml_model:train_model:82 - Точность модели сохранена: 47.87%
+2025-09-20 21:22:11.063 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:22:11.083 | INFO     | utils.ml_model:make_predictions:142 - ✅ Создано 7 прогнозов
+2025-09-20 21:22:11.083 | INFO     | __main__:run_forecast:165 - Прогноз успешно выполнен
+2025-09-20 21:22:17.652 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:22:21.503 | INFO     | __main__:run_forecast:154 - Запрос на запуск прогнозирования
+2025-09-20 21:22:21.504 | INFO     | utils.ml_model:train_model:39 - Загрузка данных для обучения модели...
+2025-09-20 21:22:21.510 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:22:21.512 | INFO     | utils.ml_model:train_model:58 - Обучение модели RandomForest...
+2025-09-20 21:22:21.575 | INFO     | utils.ml_model:train_model:66 - ✅ Модель обучена!
+2025-09-20 21:22:21.575 | INFO     | utils.ml_model:train_model:67 -    MAE: 843.82
+2025-09-20 21:22:21.575 | INFO     | utils.ml_model:train_model:68 -    MAPE: 47.87%
+2025-09-20 21:22:21.575 | INFO     | utils.ml_model:train_model:69 -    Обучено на 4 записях
+2025-09-20 21:22:21.576 | INFO     | utils.ml_model:train_model:70 -    Протестировано на 2 записях
+2025-09-20 21:22:21.576 | INFO     | utils.ml_model:train_model:82 - Точность модели сохранена: 47.87%
+2025-09-20 21:22:21.578 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:22:21.598 | INFO     | utils.ml_model:make_predictions:142 - ✅ Создано 7 прогнозов
+2025-09-20 21:22:21.598 | INFO     | __main__:run_forecast:165 - Прогноз успешно выполнен
+2025-09-20 21:22:25.037 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:22:25.039 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:22:28.536 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:22:28.542 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:22:29.954 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:22:31.752 | INFO     | __main__:run_forecast:154 - Запрос на запуск прогнозирования
+2025-09-20 21:22:31.753 | INFO     | utils.ml_model:train_model:39 - Загрузка данных для обучения модели...
+2025-09-20 21:22:31.758 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:22:31.761 | INFO     | utils.ml_model:train_model:58 - Обучение модели RandomForest...
+2025-09-20 21:22:31.825 | INFO     | utils.ml_model:train_model:66 - ✅ Модель обучена!
+2025-09-20 21:22:31.825 | INFO     | utils.ml_model:train_model:67 -    MAE: 843.82
+2025-09-20 21:22:31.825 | INFO     | utils.ml_model:train_model:68 -    MAPE: 47.87%
+2025-09-20 21:22:31.825 | INFO     | utils.ml_model:train_model:69 -    Обучено на 4 записях
+2025-09-20 21:22:31.825 | INFO     | utils.ml_model:train_model:70 -    Протестировано на 2 записях
+2025-09-20 21:22:31.825 | INFO     | utils.ml_model:train_model:82 - Точность модели сохранена: 47.87%
+2025-09-20 21:22:31.828 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:22:31.847 | INFO     | utils.ml_model:make_predictions:142 - ✅ Создано 7 прогнозов
+2025-09-20 21:22:31.847 | INFO     | __main__:run_forecast:165 - Прогноз успешно выполнен
+2025-09-20 21:23:23.027 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:23:24.969 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:23:24.971 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:23:36.619 | INFO     | __main__:run_forecast:154 - Запрос на запуск прогнозирования
+2025-09-20 21:23:36.620 | INFO     | utils.ml_model:train_model:39 - Загрузка данных для обучения модели...
+2025-09-20 21:23:36.633 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:23:36.636 | INFO     | utils.ml_model:train_model:58 - Обучение модели RandomForest...
+2025-09-20 21:23:36.698 | INFO     | utils.ml_model:train_model:66 - ✅ Модель обучена!
+2025-09-20 21:23:36.698 | INFO     | utils.ml_model:train_model:67 -    MAE: 843.82
+2025-09-20 21:23:36.698 | INFO     | utils.ml_model:train_model:68 -    MAPE: 47.87%
+2025-09-20 21:23:36.698 | INFO     | utils.ml_model:train_model:69 -    Обучено на 4 записях
+2025-09-20 21:23:36.698 | INFO     | utils.ml_model:train_model:70 -    Протестировано на 2 записях
+2025-09-20 21:23:36.698 | INFO     | utils.ml_model:train_model:82 - Точность модели сохранена: 47.87%
+2025-09-20 21:23:36.701 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:23:36.721 | INFO     | utils.ml_model:make_predictions:142 - ✅ Создано 7 прогнозов
+2025-09-20 21:23:36.721 | INFO     | __main__:run_forecast:165 - Прогноз успешно выполнен
+2025-09-20 21:23:40.070 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:26:44.446 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:26:44.937 | INFO     | __main__:<module>:300 - Запуск Flask-приложения...
+2025-09-20 21:26:48.238 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:26:48.241 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:26:50.252 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:26:50.254 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:26:52.819 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:26:53.785 | INFO     | __main__:run_forecast:154 - Запрос на запуск прогнозирования
+2025-09-20 21:26:55.061 | INFO     | utils.ml_model:train_model:39 - Загрузка данных для обучения модели...
+2025-09-20 21:26:55.078 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:26:55.079 | INFO     | utils.ml_model:train_model:58 - Обучение модели RandomForest...
+2025-09-20 21:26:55.141 | INFO     | utils.ml_model:train_model:66 - ✅ Модель обучена!
+2025-09-20 21:26:55.141 | INFO     | utils.ml_model:train_model:67 -    MAE: 843.82
+2025-09-20 21:26:55.141 | INFO     | utils.ml_model:train_model:68 -    MAPE: 47.87%
+2025-09-20 21:26:55.141 | INFO     | utils.ml_model:train_model:69 -    Обучено на 4 записях
+2025-09-20 21:26:55.141 | INFO     | utils.ml_model:train_model:70 -    Протестировано на 2 записях
+2025-09-20 21:26:55.141 | INFO     | utils.ml_model:train_model:82 - Точность модели сохранена: 47.87%
+2025-09-20 21:26:55.144 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:26:55.167 | INFO     | utils.ml_model:make_predictions:142 - ✅ Создано 7 прогнозов
+2025-09-20 21:26:55.167 | INFO     | __main__:run_forecast:165 - Прогноз успешно выполнен
+2025-09-20 21:26:56.535 | INFO     | __main__:run_forecast:154 - Запрос на запуск прогнозирования
+2025-09-20 21:26:56.536 | INFO     | utils.ml_model:train_model:39 - Загрузка данных для обучения модели...
+2025-09-20 21:26:56.542 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:26:56.545 | INFO     | utils.ml_model:train_model:58 - Обучение модели RandomForest...
+2025-09-20 21:26:56.609 | INFO     | utils.ml_model:train_model:66 - ✅ Модель обучена!
+2025-09-20 21:26:56.609 | INFO     | utils.ml_model:train_model:67 -    MAE: 843.82
+2025-09-20 21:26:56.609 | INFO     | utils.ml_model:train_model:68 -    MAPE: 47.87%
+2025-09-20 21:26:56.609 | INFO     | utils.ml_model:train_model:69 -    Обучено на 4 записях
+2025-09-20 21:26:56.609 | INFO     | utils.ml_model:train_model:70 -    Протестировано на 2 записях
+2025-09-20 21:26:56.610 | INFO     | utils.ml_model:train_model:82 - Точность модели сохранена: 47.87%
+2025-09-20 21:26:56.612 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:26:56.632 | INFO     | utils.ml_model:make_predictions:142 - ✅ Создано 7 прогнозов
+2025-09-20 21:26:56.632 | INFO     | __main__:run_forecast:165 - Прогноз успешно выполнен
+2025-09-20 21:27:02.719 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:27:03.936 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:27:03.941 | INFO     | __main__:get_raw_data:130 - Запрос сырых данных
+2025-09-20 21:27:09.452 | INFO     | __main__:get_processed_data:142 - Запрос обработанных данных
+2025-09-20 21:27:11.052 | INFO     | __main__:run_forecast:154 - Запрос на запуск прогнозирования
+2025-09-20 21:27:11.052 | INFO     | utils.ml_model:train_model:39 - Загрузка данных для обучения модели...
+2025-09-20 21:27:11.059 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:27:11.061 | INFO     | utils.ml_model:train_model:58 - Обучение модели RandomForest...
+2025-09-20 21:27:11.125 | INFO     | utils.ml_model:train_model:66 - ✅ Модель обучена!
+2025-09-20 21:27:11.125 | INFO     | utils.ml_model:train_model:67 -    MAE: 843.82
+2025-09-20 21:27:11.125 | INFO     | utils.ml_model:train_model:68 -    MAPE: 47.87%
+2025-09-20 21:27:11.125 | INFO     | utils.ml_model:train_model:69 -    Обучено на 4 записях
+2025-09-20 21:27:11.125 | INFO     | utils.ml_model:train_model:70 -    Протестировано на 2 записях
+2025-09-20 21:27:11.125 | INFO     | utils.ml_model:train_model:82 - Точность модели сохранена: 47.87%
+2025-09-20 21:27:11.127 | INFO     | utils.ml_model:prepare_features:33 - После подготовки признаков осталось 6 записей
+2025-09-20 21:27:11.147 | INFO     | utils.ml_model:make_predictions:142 - ✅ Создано 7 прогнозов
+2025-09-20 21:27:11.147 | INFO     | __main__:run_forecast:165 - Прогноз успешно выполнен

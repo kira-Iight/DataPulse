@@ -1,19 +1,12 @@
-# app.py
 import os
 import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from flask import Flask, render_template, request, jsonify, send_file, session
 from werkzeug.utils import secure_filename
 import pandas as pd
 from datetime import datetime, timedelta
-import logging
-import json
-from io import BytesIO
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import base64
 from loguru import logger
+from utils.data_processor import load_data_from_csv, preprocess_data
 
 # Настройка логирования
 logger.remove()
@@ -47,23 +40,6 @@ def init_session_data():
         session['model_accuracy'] = []
     session.modified = True
 
-def load_data_from_csv(file_path):
-    """Загружает данные из CSV файла."""
-    df = pd.read_csv(file_path, parse_dates=['date'])
-    return df
-
-def preprocess_data(df):
-    """Очищает и агрегирует данные."""
-    # Удаление дубликатов, обработка пропусков
-    df_clean = df.drop_duplicates().dropna()
-    # Агрегация по дням
-    df_daily = df_clean.groupby('date', as_index=False).agg({'quantity': 'sum', 'price': 'mean'})
-    df_daily['total_sales'] = df_daily['quantity'] * df_daily['price']
-    # Создание признаков
-    df_daily['day_of_week'] = df_daily['date'].dt.dayofweek
-    df_daily['month'] = df_daily['date'].dt.month
-    df_daily['is_holiday'] = False
-    return df_daily[['date', 'total_sales', 'day_of_week', 'month', 'is_holiday']]
 
 def save_processed_data(df):
     """Сохраняет обработанные данные в сессию."""
@@ -214,9 +190,9 @@ def generate_pdf_report():
     """API endpoint для генерации PDF отчета"""
     logger.info("Запрос на генерацию PDF отчета")
     try:
-        from utils.report_generator import generate_report
+        from utils.report_generator import generate_full_report
         
-        pdf_buffer = generate_report(session)
+        pdf_buffer = generate_full_report(session)
         
         if pdf_buffer:
             return send_file(
@@ -232,7 +208,6 @@ def generate_pdf_report():
         logger.error(f"Ошибка при генерации отчета: {e}")
         return jsonify({'error': str(e)}), 500
 
-# app.py - добавим новые маршруты
 
 @app.route('/api/report/sales')
 def generate_sales_report():
