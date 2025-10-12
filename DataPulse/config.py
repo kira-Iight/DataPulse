@@ -1,6 +1,7 @@
 # config.py
 import os
 from datetime import datetime
+from typing import Dict, Any, List
 
 class AppConfig:
     """Конфигурация приложения"""
@@ -14,13 +15,22 @@ class AppConfig:
     FORECAST_DAYS = 7
     MAX_FILE_SIZE_MB = 50
     
-    # Параметры модели
+    # Параметры моделей
     MODEL_PARAMS = {
-        'n_estimators': 100,
-        'random_state': 42,
-        'max_depth': 10,
-        'min_samples_split': 2,
-        'min_samples_leaf': 1
+        'random_forest': {
+            'n_estimators': 100,
+            'random_state': 42,
+            'max_depth': 10,
+            'min_samples_split': 2,
+            'min_samples_leaf': 1
+        }
+    }
+    
+    # Настройки кросс-валидации
+    TIME_SERIES_CV = {
+        'n_splits': 5,
+        'test_size': 7,
+        'gap': 0
     }
     
     # Пути

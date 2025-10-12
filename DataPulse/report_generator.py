@@ -1,3 +1,4 @@
+#roport_generator.py
 import pandas as pd
 import numpy as np
 from jinja2 import Template
@@ -186,7 +187,7 @@ def generate_sales_report(session_data):
                 </table>
                 
                 <div class="footer">
-                    <p>Отчет сгенерирован системой прогнозирования продаж DataPulse Analytics</p>
+                    <p>Отчет сгенерирован системой прогнозирования продаж DataPulse</p>
                 </div>
             </div>
         </body>
@@ -235,9 +236,10 @@ def generate_sales_report(session_data):
         return None
 
 def generate_forecast_report(session_data):
-    """Генерирует отчет только по прогнозам."""
+    """Генерирует отчет только по прогнозам с ограничением исторических данных до 30 дней."""
     try:
         forecast_results = session_data.get('forecast_results', [])
+        processed_data = session_data.get('processed_data', [])
         model_accuracy = session_data.get('model_accuracy', [])
         
         if not forecast_results:
@@ -246,15 +248,39 @@ def generate_forecast_report(session_data):
             
         df_forecast = pd.DataFrame(forecast_results)
         
+        # Ограничиваем исторические данные последними 30 днями
+        if processed_data:
+            df_historical = pd.DataFrame(processed_data)
+            if 'date' in df_historical.columns:
+                df_historical['date'] = pd.to_datetime(df_historical['date'])
+                df_historical = df_historical.sort_values('date')
+                # Берем только последние 30 дней
+                df_historical = df_historical.tail(30)
+                limited_historical_data = df_historical.to_dict('records')
+            else:
+                limited_historical_data = processed_data[-30:] if len(processed_data) > 30 else processed_data
+        else:
+            limited_historical_data = []
+        
         # Получаем точность модели
         accuracy_info = model_accuracy[-1] if model_accuracy else None
         accuracy_value = accuracy_info.get('accuracy', 0) if accuracy_info else 0
         model_name = accuracy_info.get('model_name', 'Unknown') if accuracy_info else 'Unknown'
         
-        # Создаем график прогнозов
+        # Создаем график прогнозов с ограниченными историческими данными
         try:
             plt.figure(figsize=(14, 8))
             
+            # Добавляем исторические данные (только последние 30 дней)
+            if limited_historical_data and 'date' in limited_historical_data[0] and 'total_sales' in limited_historical_data[0]:
+                df_hist_limited = pd.DataFrame(limited_historical_data)
+                df_hist_limited['date'] = pd.to_datetime(df_hist_limited['date'])
+                dates_hist = df_hist_limited['date']
+                sales_hist = df_hist_limited['total_sales']
+                
+                plt.plot(dates_hist, sales_hist, label='Исторические данные (30 дней)', marker='o', linewidth=2, color='#2563EB', markersize=4, alpha=0.7)
+            
+            # Добавляем прогноз
             if not df_forecast.empty and 'date' in df_forecast.columns and 'predicted_sales' in df_forecast.columns:
                 df_forecast['date'] = pd.to_datetime(df_forecast['date'])
                 dates_forecast = df_forecast['date']
@@ -334,15 +360,20 @@ def generate_forecast_report(session_data):
                 tr:nth-child(even) { background-color: #f9f9f9; }
                 img { max-width: 100%; height: auto; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
                 .footer { text-align: center; margin-top: 30px; color: #6c757d; font-size: 12px; }
+                .data-info { background-color: #e3f2fd; padding: 10px; border-radius: 5px; margin: 10px 0; font-size: 14px; }
             </style>
         </head>
         <body>
             <div class="container">
-                <h1>📊 Отчет по прогнозированию продаж</h1>
+                <h1>Отчет по прогнозированию продаж</h1>
                 <p style="text-align: center; color: #6c757d;">Сгенерирован: {{ generation_date }}</p>
                 
+                <div class="data-info">
+                     <strong>Период данных:</strong> последние 30 дней исторических данных + прогноз на 7 дней
+                </div>
+                
                 <div class="accuracy-info">
-                    <h3 style="margin-top: 0; color: #27ae60;">🎯 Информация о модели</h3>
+                    <h3 style="margin-top: 0; color: #27ae60;"> Информация о модели</h3>
                     <p><strong>Модель:</strong> {{ model_name }}</p>
                     <p><strong>Точность:</strong> {{ "%.1f"|format((1-accuracy_value)*100) }}%</p>
                     <p><strong>Дата обучения:</strong> {{ accuracy_date }}</p>
@@ -369,7 +400,7 @@ def generate_forecast_report(session_data):
                     </div>
                 </div>
                 
-                <h2>📅 Детали прогноза</h2>
+                <h2> Детали прогноза</h2>
                 <table>
                     <tr>
                         <th>Дата</th>
@@ -388,7 +419,7 @@ def generate_forecast_report(session_data):
                 </table>
                 
                 <div class="footer">
-                    <p>Отчет сгенерирован системой прогнозирования продаж DataPulse Analytics</p>
+                    <p>Отчет сгенерирован системой прогнозирования продаж DataPulse</p>
                 </div>
             </div>
         </body>
@@ -482,17 +513,19 @@ def generate_full_report(session_data):
         try:
             plt.figure(figsize=(16, 10))
             
+            # В функции generate_full_report, в секции создания графика, замените:
             # Исторические данные
             if not df_data.empty and 'date' in df_data.columns and 'total_sales' in df_data.columns:
                 dates_data = df_data['date']
                 sales_data = df_data['total_sales']
-                plt.plot(dates_data, sales_data, label='Исторические данные', marker='o', linewidth=3, color='#2563EB', markersize=6)
                 
-                # Добавляем скользящее среднее для исторических данных
-                if len(sales_data) >= 7:
-                    rolling_mean = sales_data.rolling(window=7).mean()
-                    plt.plot(dates_data, rolling_mean, label='Скользящее среднее (7 дней)', linewidth=2, color='#3498db', linestyle='--')
-            
+                # Ограничиваем показ только последними 30 днями
+                if len(dates_data) > 30:
+                    dates_data = dates_data[-30:]
+                    sales_data = sales_data[-30:]
+                
+                plt.plot(dates_data, sales_data, label='Исторические данные (30 дней)', marker='o', linewidth=3, color='#2563EB', markersize=6)
+                        
             # Прогноз
             if not df_forecast.empty and 'date' in df_forecast.columns and 'predicted_sales' in df_forecast.columns:
                 dates_forecast = df_forecast['date']
@@ -568,11 +601,11 @@ def generate_full_report(session_data):
         </head>
         <body>
             <div class="container">
-                <h1>📊 Полный отчет по прогнозированию продаж</h1>
+                <h1> Полный отчет по прогнозированию продаж</h1>
                 <p style="text-align: center; color: #6c757d;">Сгенерирован: {{ generation_date }}</p>
                 
                 <div class="accuracy-info">
-                    <h3 style="margin-top: 0; color: #27ae60;">🎯 Информация о модели</h3>
+                    <h3 style="margin-top: 0; color: #27ae60;"> Информация о модели</h3>
                     <p><strong>Модель:</strong> {{ model_name }}</p>
                     <p><strong>Точность:</strong> {{ "%.1f"|format((1-accuracy_value)*100) }}%</p>
                     <p><strong>Дата обучения:</strong> {{ accuracy_date }}</p>
@@ -582,7 +615,7 @@ def generate_full_report(session_data):
                 
                 <div class="comparison-grid">
                     <div class="comparison-section">
-                        <div class="comparison-title">📈 Исторические данные</div>
+                        <div class="comparison-title"> Исторические данные</div>
                         <div class="stats-grid">
                             <div class="stat-card">
                                 <div class="stat-value">{{ "%.0f"|format(total_sales) }}</div>
@@ -644,7 +677,7 @@ def generate_full_report(session_data):
                     {% endfor %}
                 </table>
                 
-                <h2>📅 Исторические данные (последние 10 записей)</h2>
+                <h2> Исторические данные (последние 10 записей)</h2>
                 <table>
                     <tr>
                         <th>Дата</th>
@@ -663,7 +696,7 @@ def generate_full_report(session_data):
                 </table>
                 
                 <div class="footer">
-                    <p>Отчет сгенерирован системой прогнозирования продаж DataPulse Analytics</p>
+                    <p>Отчет сгенерирован системой прогнозирования продаж DataPulse</p>
                 </div>
             </div>
         </body>
