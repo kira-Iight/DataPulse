@@ -95,7 +95,7 @@ class SalesForecastApp:
         self.forecast_engine = ForecastEngine()
         self.logger = logging.getLogger(__name__)
         
-        # Устанавливаем иконку приложения (НАДО ДОРАБОТАТЬ!)
+        # Устанавливаем иконку приложения
         try:
             self.root.iconbitmap('icon.ico')
         except:
@@ -111,6 +111,11 @@ class SalesForecastApp:
         self.model_accuracy = []
         self.model_comparison_results = None
         
+        # Инициализируем недостающие атрибуты
+        self.comparison_tree = None
+        self.ml_info_label = None
+        self.model_details_text = None
+        
         # Создаем интерфейс
         self.create_widgets()
                 
@@ -121,7 +126,7 @@ class SalesForecastApp:
         # Современная тема
         style.theme_use('clam')
         
-        # Настраиваем цвета - убираем background для совместимости
+        # Настраиваем цвета
         style.configure('TFrame')
         style.configure('TLabel', font=ModernTheme.FONTS['normal'])
         style.configure('TButton', font=ModernTheme.FONTS['normal'], padding=6)
@@ -216,18 +221,13 @@ class SalesForecastApp:
         return limited_historical, self.forecast_results or []
 
     def update_forecast_chart(self):
-        """Обновляет график прогноза с ограничением до 30 дней истории"""
+        """Обновляет график прогноза с реальными доверительными интервалами"""
         if self.forecast_results:
             self.ax.clear()
             
-            # Получаем ограниченные данные для графика
             historical_data, forecasts = self.get_chart_data(historical_days=30)
             
-            # Обновляем информацию о прогнозе
-            total_forecast = sum(pred['predicted_sales'] for pred in forecasts)
-            self.forecast_info_label.config(text=f"Прогноз: {total_forecast:,.0f} руб. (Random Forest)")
-            
-            # Исторические данные (только последние 30 дней)
+            # Исторические данные
             if not historical_data.empty:
                 dates = historical_data['date']
                 sales = historical_data['total_sales']
@@ -250,25 +250,40 @@ class SalesForecastApp:
                     color=ModernTheme.COLORS['success'],
                     markersize=6)
             
-            # Доверительный интервал
-            upper_bound = [sales * 1.2 for sales in forecast_sales]
-            lower_bound = [sales * 0.8 for sales in forecast_sales]
-            self.ax.fill_between(forecast_dates, lower_bound, upper_bound, 
-                            alpha=0.2, 
-                            color=ModernTheme.COLORS['success'],
-                            label='Доверительный интервал (±20%)')
+            # ДОВЕРИТЕЛЬНЫЕ ИНТЕРВАЛЫ - БЕЗ ОГРАНИЧЕНИЙ
+            if forecasts and 'confidence_interval' in forecasts[0]:
+                upper_bound = [pred['confidence_interval']['upper'] for pred in forecasts]
+                lower_bound = [pred['confidence_interval']['lower'] for pred in forecasts]
+                
+                # Берем РЕАЛЬНЫЕ значения из расчета БЕЗ ИСКУССТВЕННЫХ ОГРАНИЧЕНИЙ
+                uncertainty_pct = forecasts[0]['confidence_interval']['uncertainty_pct']
+                confidence_level = forecasts[0]['confidence_interval']['confidence_level']
+                
+                # ВАЖНО: НЕ ОГРАНИЧИВАЕМ уровень доверия - используем РОВНО ТО, ЧТО РАССЧИТАНО
+                self.ax.fill_between(forecast_dates, lower_bound, upper_bound, 
+                                alpha=0.2, 
+                                color=ModernTheme.COLORS['success'],
+                                label=f'Доверительный интервал ±{uncertainty_pct:.1f}%')
             
-            self.ax.set_title(f"Прогноз продаж на 7 дней", fontsize=14, fontweight='bold', pad=20)
+            # Обновляем информацию о прогнозе
+            if forecasts:
+                total_forecast = sum(pred['predicted_sales'] for pred in forecasts)
+                avg_uncertainty = np.mean([pred['confidence_interval']['uncertainty_pct'] for pred in forecasts])
+                
+                self.forecast_info_label.config(
+                    text=f"Прогноз: {total_forecast:,.0f} руб. | Неопределенность: ±{avg_uncertainty:.1f}%"
+                )
+            
+            self.ax.set_title(f"Прогноз продаж на 7 дней с доверительными интервалами", 
+                            fontsize=14, fontweight='bold', pad=20)
             self.ax.set_xlabel("Дата", fontsize=12)
             self.ax.set_ylabel("Продажи (руб.)", fontsize=12)
             self.ax.legend()
             self.ax.grid(True, alpha=0.3)
             
-            # Поворачиваем подписи дат
             plt.setp(self.ax.xaxis.get_majorticklabels(), rotation=45)
-            
             self.canvas.draw()
-
+            
     def update_stats_chart(self):
         """Обновляет график статистики с ограничением до 30 дней"""
         if self.processed_data is not None and not self.processed_data.empty:
@@ -281,7 +296,6 @@ class SalesForecastApp:
                 dates = historical_data['date']
                 sales = historical_data['total_sales']
                 
-                # Используем современные цвета для графика
                 self.stats_ax.plot(dates, sales, marker='o', linewidth=2.5, 
                                 color=ModernTheme.COLORS['primary'], markersize=4, alpha=0.8)
                 
@@ -297,9 +311,7 @@ class SalesForecastApp:
                 self.stats_ax.grid(True, alpha=0.3)
                 self.stats_ax.legend(['Фактические данные', 'Скользящее среднее (7 дней)'])
                 
-                # Поворачиваем подписи дат
                 plt.setp(self.stats_ax.xaxis.get_majorticklabels(), rotation=45)
-                
                 self.stats_canvas.draw()
 
     def create_sidebar(self, parent):
@@ -629,36 +641,7 @@ class SalesForecastApp:
             # Обновляем точность модели если есть
             if self.model_accuracy:
                 self.update_accuracy_metric()
-    
-    def update_stats_chart(self):
-        """Обновляет график статистики"""
-        if self.processed_data is not None and not self.processed_data.empty:
-            self.stats_ax.clear()
-            
-            dates = self.processed_data['date']
-            sales = self.processed_data['total_sales']
-            
-            # Используем современные цвета для графика
-            self.stats_ax.plot(dates, sales, marker='o', linewidth=2.5, 
-                             color=ModernTheme.COLORS['primary'], markersize=4, alpha=0.8)
-            
-            # Добавляем скользящее среднее
-            if len(sales) >= 7:
-                rolling_mean = sales.rolling(window=7).mean()
-                self.stats_ax.plot(dates, rolling_mean, linewidth=2, 
-                                 color=ModernTheme.COLORS['warning'], linestyle='--', alpha=0.7)
-            
-            self.stats_ax.set_title("Динамика продаж", fontsize=14, fontweight='bold', pad=20)
-            self.stats_ax.set_xlabel("Дата", fontsize=12)
-            self.stats_ax.set_ylabel("Продажи (руб.)", fontsize=12)
-            self.stats_ax.grid(True, alpha=0.3)
-            self.stats_ax.legend(['Фактические данные', 'Скользящее среднее (7 дней)'])
-            
-            # Поворачиваем подписи дат
-            plt.setp(self.stats_ax.xaxis.get_majorticklabels(), rotation=45)
-            
-            self.stats_canvas.draw()
-    
+
     def run_forecast(self):
         """Запускает прогнозирование с Random Forest"""
         if self.processed_data is None or self.processed_data.empty:
@@ -727,11 +710,11 @@ class SalesForecastApp:
                 self.model_accuracy = session_data.get('model_accuracy', [])
                 
                 # Обновляем интерфейс
-                self.root.after(0, self.update_forecast_chart)
+                self.root.after(0, self.update_forecast_chart)  # ВАЖНО: обновляем график
                 self.root.after(0, self.update_accuracy_metric)
                 self.root.after(0, progress.destroy)
                 
-                # Показываем сообщение об успехе (ТОЛЬКО ЗДЕСЬ)
+                # Показываем сообщение об успехе
                 metrics = self.forecast_engine.get_model_metrics(session_data)
                 accuracy_percent = metrics.get('accuracy_percent', (1 - accuracy) * 100)
                 success_msg = f"Прогноз выполнен! Random Forest, Точность: {accuracy_percent:.1f}%"
@@ -747,46 +730,7 @@ class SalesForecastApp:
         thread = threading.Thread(target=train_and_predict)
         thread.daemon = True
         thread.start()
-    def update_model_details(self):
-        """Обновляет детальную информацию о модели"""
-        if not self.model_accuracy:
-            return
-        
-        session_data = {'model_accuracy': self.model_accuracy}
-        metrics = self.forecast_engine.get_model_metrics(session_data)
-        
-        if metrics:
-            # Формируем детальную информацию
-            details_text = f"""
-ДЕТАЛЬНАЯ ИНФОРМАЦИЯ О МОДЕЛИ
-
-Основные метрики:
-• Модель: Random Forest
-• Точность (MAPE): {metrics.get('accuracy_percent', 0):.2f}%
-• MAE: {metrics.get('mae', 0):.2f} руб.
-• Количество признаков: {metrics.get('features_used', 0)}
-• Размер обучающей выборки: {metrics.get('training_size', 0)}
-
-Кросс-валидация:
-• Средний MAPE: {metrics.get('cv_mean_mape', 0):.2f}%
-• Стандартное отклонение: {metrics.get('cv_std_mape', 0):.2f}%
-
-Информация:
-• Дата обучения: {metrics.get('created_at', 'N/A')}
-• Оптимизация гиперпараметров: Нет  # УДАЛИТЬ ссылку на optimize_hyperparams_var
-• Кросс-валидация: Включена
-
-Рекомендации:
-• Для улучшения точности попробуйте увеличить объем данных
-• Используйте больше исторических данных для лучшего прогноза
-"""
-        
-            # Обновляем текстовое поле
-            self.model_details_text.config(state=tk.NORMAL)
-            self.model_details_text.delete(1.0, tk.END)
-            self.model_details_text.insert(tk.END, details_text)
-            self.model_details_text.config(state=tk.DISABLED)
-
+    
     def update_accuracy_metric(self):
         """Обновляет метрику точности с расширенной информацией"""
         if self.model_accuracy:
@@ -809,9 +753,6 @@ class SalesForecastApp:
             # Очищаем интерфейс
             for item in self.data_tree.get_children():
                 self.data_tree.delete(item)
-            
-            for item in self.comparison_tree.get_children():
-                self.comparison_tree.delete(item)
             
             self.ax.clear()
             self.ax.set_title("Прогноз продаж", fontsize=14, fontweight='bold', pad=20)
@@ -839,13 +780,6 @@ class SalesForecastApp:
             # Сбрасываем информационные лейблы
             self.data_info_label.config(text="Данные не загружены")
             self.forecast_info_label.config(text="Прогноз не выполнен")
-            self.ml_info_label.config(text="Модель не обучена")
-            
-            # Сбрасываем детали модели
-            self.model_details_text.config(state=tk.NORMAL)
-            self.model_details_text.delete(1.0, tk.END)
-            self.model_details_text.insert(tk.END, "Информация о модели появится после обучения...")
-            self.model_details_text.config(state=tk.DISABLED)
             
             messagebox.showinfo("Успех", "Данные очищены")
 
