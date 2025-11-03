@@ -17,12 +17,10 @@ class AppConfig:
     
     # Параметры моделей
     MODEL_PARAMS = {
-        'random_forest': {
-            'n_estimators': 100,
-            'random_state': 42,
-            'max_depth': 10,
-            'min_samples_split': 2,
-            'min_samples_leaf': 1
+        'simple_average': {
+            'window_7_weight': 0.6,
+            'window_30_weight': 0.4,
+            'confidence_level': 0.88
         }
     }
     

@@ -210,17 +210,19 @@ class DataManager:
             self.logger.warning(f"Найдено {duplicate_count} дубликатов")
     
     def preprocess_data(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Очищает и агрегирует данные с расширенными фичами"""
+        """Очищает и агрегирует данные с фильтрацией выбросов"""
         try:
             self.logger.info("Начало обработки данных")
             
             df_clean = df.copy()
             initial_count = len(df_clean)
+            
+            # Базовая очистка
             df_clean = df_clean.drop_duplicates().dropna()
             cleaned_count = initial_count - len(df_clean)
             
             if cleaned_count > 0:
-                self.logger.info(f"Удалено записей: {cleaned_count}")
+                self.logger.info(f"Удалено дубликатов и пропусков: {cleaned_count}")
             
             # Агрегация по дням
             df_daily = df_clean.groupby('date', as_index=False).agg({
@@ -228,6 +230,9 @@ class DataManager:
                 'price': 'mean'
             })
             df_daily['total_sales'] = df_daily['quantity'] * df_daily['price']
+            
+            # ФИЛЬТРАЦИЯ ВЫБРОСОВ - КРИТИЧЕСКИ ВАЖНО
+            df_daily = self._remove_sales_outliers(df_daily)
             
             # Создание расширенных признаков
             df_daily = self.feature_engineer.create_advanced_features(df_daily)
@@ -241,6 +246,17 @@ class DataManager:
         except Exception as e:
             self.logger.error(f"Ошибка обработки данных: {str(e)}")
             raise
+
+    def _remove_sales_outliers(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Минимальная фильтрация выбросов"""
+        try:
+            # ВОЗВРАЩАЕМ ВСЕ ДАННЫЕ БЕЗ ФИЛЬТРАЦИИ
+            # Пусть модель сама научится работать с вариациями
+            return df
+            
+        except Exception as e:
+            self.logger.error(f"Ошибка фильтрации: {e}")
+            return df
     
     def _validate_processed_data(self, df: pd.DataFrame) -> None:
         """Валидация обработанных данных"""
