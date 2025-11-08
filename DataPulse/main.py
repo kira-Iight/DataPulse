@@ -10,70 +10,12 @@ from datetime import datetime
 import threading
 import logging
 import numpy as np
-
-# Добавляем путь к модулям
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-# Импортируем модули
-try:
-    from config import AppConfig, DataValidationRules
-    from data_manager import DataManager
-    from ml_engine import ForecastEngine
-    from logging_config import setup_logging
-    from report_generator import generate_sales_report, generate_forecast_report, generate_full_report
-except ImportError as e:
-    print(f"Ошибка импорта: {e}")
-    print("Создаем базовые классы для работы...")
-    
-    # Базовые классы на случай ошибки импорта
-    class AppConfig:
-        DATETIME_FORMAT = "%Y-%m-%d"
-        DISPLAY_DATE_FORMAT = "%d.%m.%Y"
-        MIN_DATA_POINTS = 30
-        FORECAST_DAYS = 7
-        MAX_FILE_SIZE_MB = 50
-        COLORS = {
-            'primary': '#2563EB', 'primary_light': '#3B82F6', 'secondary': '#64748B',
-            'success': '#10B981', 'warning': '#F59E0B', 'danger': '#EF4444',
-            'dark': '#1E293B', 'light': '#F8FAFC', 'background': '#F1F5F9',
-            'card': '#FFFFFF', 'border': '#E2E8F0'
-        }
-        FONTS = {
-            'title': ('Segoe UI', 20, 'bold'), 'subtitle': ('Segoe UI', 12, 'bold'),
-            'normal': ('Segoe UI', 10), 'small': ('Segoe UI', 9), 'metric': ('Segoe UI', 14, 'bold')
-        }
-    
-    class DataValidationRules:
-        REQUIRED_COLUMNS = ['date', 'quantity', 'price']
-    
-    # Базовые функции для совместимости
-    def setup_logging():
-        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    
-    class DataManager:
-        def load_data_from_csv(self, file_path):
-            return pd.read_csv(file_path, parse_dates=['date'])
-        def preprocess_data(self, df):
-            return df
-        def get_data_statistics(self, df):
-            return {}
-    
-    class ForecastEngine:
-        def set_model_type(self, model_type): pass
-        def train_model(self, session_data, optimize_hyperparams=False):
-            return None, 0.0
-        def make_predictions(self, model, session_data, days_to_forecast=7):
-            return []
-        def compare_models(self, session_data):
-            return {}
-        def get_model_metrics(self, session_data):
-            return {}
-    
-    def generate_sales_report(session_data): return None
-    def generate_forecast_report(session_data): return None
-    def generate_full_report(session_data): return None
-
-# Инициализируем логирование
+from config import AppConfig, DataValidationRules
+from data_manager import DataManager
+from ml_engine import SimpleNeuralNetworkEngine
+from logging_config import setup_logging
+from report_generator import generate_sales_report, generate_forecast_report, generate_full_report
 setup_logging()
 
 class ModernTheme:
@@ -92,7 +34,7 @@ class SalesForecastApp:
         
         # Инициализируем менеджеры
         self.data_manager = DataManager()
-        self.forecast_engine = ForecastEngine()
+        self.forecast_engine = SimpleNeuralNetworkEngine()
         self.logger = logging.getLogger(__name__)
         
         # Устанавливаем иконку приложения
@@ -110,11 +52,6 @@ class SalesForecastApp:
         self.forecast_results = None
         self.model_accuracy = []
         self.model_comparison_results = None
-        
-        # Инициализируем недостающие атрибуты
-        self.comparison_tree = None
-        self.ml_info_label = None
-        self.model_details_text = None
         
         # Создаем интерфейс
         self.create_widgets()
@@ -582,6 +519,8 @@ class SalesForecastApp:
                 self.raw_data = self.data_manager.load_data_from_csv(file_path)
                 self.processed_data = self.data_manager.preprocess_data(self.raw_data)
                 
+                # Передаем путь к файлу в модель
+                self.forecast_engine.set_current_file_path(file_path)
                 # Обновляем интерфейс
                 self.update_data_table()
                 self.update_stats()

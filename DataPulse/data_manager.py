@@ -5,22 +5,9 @@ import os
 from datetime import datetime, timedelta
 import logging
 from typing import Tuple, Optional, Dict, Any, List
+from config import AppConfig, DataValidationRules
 
-# Базовая конфигурация если не импортирована из config.py
-class BaseDataValidationRules:
-    """Базовые правила валидации данных"""
-    REQUIRED_COLUMNS = ['date', 'quantity', 'price']  # Только эти колонки должны быть в исходном CSV
-    DATE_RANGE = {
-        'min': datetime(2000, 1, 1),
-        'max': datetime(2030, 12, 31)
-    }
-    VALUE_RANGES = {
-        'quantity': (0, 1000000),
-        'price': (0, 10000000),
-        'total_sales': (0, 100000000)
-    }
-
-class BaseAppConfig:
+class AppConfig:
     """Базовая конфигурация"""
     MAX_FILE_SIZE_MB = 50
     DISPLAY_DATE_FORMAT = "%d.%m.%Y"
@@ -162,9 +149,9 @@ class DataManager:
     
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.validation_rules = BaseDataValidationRules()
+        self.validation_rules = DataValidationRules()
         self.feature_engineer = AdvancedFeatureEngineer()
-        self.config = BaseAppConfig()
+        self.config = AppConfig()
     
     def load_data_from_csv(self, file_path: str) -> pd.DataFrame:
         """Загружает данные из CSV файла с валидацией"""
@@ -306,12 +293,3 @@ class DataManager:
         date_range = pd.date_range(start=df['date'].min(), end=df['date'].max())
         missing_dates = date_range.difference(df['date'])
         return len(missing_dates)
-
-# Функции для обратной совместимости
-def load_data_from_csv(file_path):
-    manager = DataManager()
-    return manager.load_data_from_csv(file_path)
-
-def preprocess_data(df):
-    manager = DataManager()
-    return manager.preprocess_data(df)
