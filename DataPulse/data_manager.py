@@ -7,11 +7,6 @@ import logging
 from typing import Tuple, Optional, Dict, Any, List
 from config import AppConfig, DataValidationRules
 
-class AppConfig:
-    """Базовая конфигурация"""
-    MAX_FILE_SIZE_MB = 50
-    DISPLAY_DATE_FORMAT = "%d.%m.%Y"
-
 class AdvancedFeatureEngineer:
     """Создание расширенных признаков для временных рядов"""
     
@@ -218,9 +213,6 @@ class DataManager:
             })
             df_daily['total_sales'] = df_daily['quantity'] * df_daily['price']
             
-            # ФИЛЬТРАЦИЯ ВЫБРОСОВ - КРИТИЧЕСКИ ВАЖНО
-            df_daily = self._remove_sales_outliers(df_daily)
-            
             # Создание расширенных признаков
             df_daily = self.feature_engineer.create_advanced_features(df_daily)
             
@@ -233,17 +225,6 @@ class DataManager:
         except Exception as e:
             self.logger.error(f"Ошибка обработки данных: {str(e)}")
             raise
-
-    def _remove_sales_outliers(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Минимальная фильтрация выбросов"""
-        try:
-            # ВОЗВРАЩАЕМ ВСЕ ДАННЫЕ БЕЗ ФИЛЬТРАЦИИ
-            # Пусть модель сама научится работать с вариациями
-            return df
-            
-        except Exception as e:
-            self.logger.error(f"Ошибка фильтрации: {e}")
-            return df
     
     def _validate_processed_data(self, df: pd.DataFrame) -> None:
         """Валидация обработанных данных"""

@@ -1,0 +1,6 @@
+2025-11-12 16:06:08 - root - INFO - Система логирования инициализирована
+2025-11-12 16:06:15 - data_manager - INFO - Загрузка данных из /Users/nayeon/Documents/GitHub/DataPulse/smooth_sales_data_40_days.csv
+2025-11-12 16:06:15 - data_manager - INFO - Успешно загружено 40 записей
+2025-11-12 16:06:15 - data_manager - INFO - Начало обработки данных
+2025-11-12 16:06:15 - data_manager - INFO - Валидация данных пройдена успешно
+2025-11-12 16:06:15 - data_manager - INFO - Обработка завершена. Итоговых записей: 40

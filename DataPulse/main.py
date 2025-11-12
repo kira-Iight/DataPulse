@@ -115,7 +115,7 @@ class SalesForecastApp:
         # Заголовок приложения
         header_frame = ttk.Frame(main_container)
         header_frame.pack(fill=tk.X, pady=(0, 20))
-        
+
         title_label = ttk.Label(header_frame, 
                  text="DataPulse",
                  style='Title.TLabel')
@@ -124,7 +124,7 @@ class SalesForecastApp:
         subtitle_label = ttk.Label(header_frame, 
                  font=ModernTheme.FONTS['subtitle'])
         subtitle_label.pack(side=tk.LEFT, padx=(10, 0))
-        
+
         # Основной контент
         content_frame = ttk.Frame(main_container)
         content_frame.pack(fill=tk.BOTH, expand=True)
@@ -165,16 +165,6 @@ class SalesForecastApp:
             self.ax.clear()
             
             historical_data, forecasts = self.get_chart_data(historical_days=30)
-            
-            # Проверяем согласованность прогноза с историей
-            if historical_data is not None and not historical_data.empty and forecasts:
-                is_consistent = self.forecast_engine.validate_forecast_consistency(
-                    forecasts, 
-                    historical_data
-                )
-                
-                if not is_consistent:
-                    self.logger.warning("Прогноз может быть несогласованным с историческими данными")
             
             # Исторические данные
             if historical_data is not None and not historical_data.empty:
@@ -277,13 +267,13 @@ class SalesForecastApp:
         data_label.pack(anchor=tk.W, padx=20, pady=(10, 5))
         
         load_button = ttk.Button(parent, 
-                  text="📁 Загрузить CSV", 
+                  text="Загрузить CSV", 
                   command=self.load_csv_file,
                   style='Primary.TButton')
         load_button.pack(fill=tk.X, padx=20, pady=5)
         
         clear_button = ttk.Button(parent, 
-                  text="🗑️ Очистить данные", 
+                  text="Очистить данные", 
                   command=self.clear_data,
                   style='Secondary.TButton')
         clear_button.pack(fill=tk.X, padx=20, pady=5)
@@ -295,7 +285,7 @@ class SalesForecastApp:
         forecast_label.pack(anchor=tk.W, padx=20, pady=(20, 5))
         
         train_button = ttk.Button(parent, 
-                  text="Обучить и прогнозировать", 
+                  text="Обучить и спрогнозировать", 
                   command=self.run_forecast,
                   style='Success.TButton')
         train_button.pack(fill=tk.X, padx=20, pady=5)
@@ -329,11 +319,11 @@ class SalesForecastApp:
         
         # Вкладка "Данные"
         self.data_frame = ttk.Frame(self.notebook, padding=15)
-        self.notebook.add(self.data_frame, text="📊 Данные")
+        self.notebook.add(self.data_frame, text="Данные")
         
         # Вкладка "Прогноз"
         self.forecast_frame = ttk.Frame(self.notebook, padding=15)
-        self.notebook.add(self.forecast_frame, text="🔮 Прогноз")
+        self.notebook.add(self.forecast_frame, text="Прогноз")
         
         # Вкладка "Статистика"
         self.stats_frame = ttk.Frame(self.notebook, padding=15)
@@ -397,13 +387,13 @@ class SalesForecastApp:
         
         forecast_title = ttk.Label(header, 
                  text="Прогноз продаж на 7 дней", 
-                 font=ModernTheme.FONTS['subtitle'])
+                 style='Title.TLabel')
         forecast_title.pack(side=tk.LEFT)
         
         # Информация о прогнозе
         self.forecast_info_label = ttk.Label(header, 
                                            text="Прогноз не выполнен", 
-                                           font=ModernTheme.FONTS['small'])
+                                           style='Title.TLabel')
         self.forecast_info_label.pack(side=tk.RIGHT)
         
         # График прогноза в карточке
@@ -431,28 +421,33 @@ class SalesForecastApp:
         # Заголовок
         stats_title = ttk.Label(self.stats_frame, 
                  text="Статистика данных", 
-                 style="T.TLabel")
+                 style='Title.TLabel')
         stats_title.pack(anchor=tk.W, pady=(0, 15))
         
         # Карточки с метриками
         metrics_frame = ttk.Frame(self.stats_frame)
         metrics_frame.pack(fill=tk.X, pady=(0, 20))
 
+        # Настроим колонки для равномерного распределения
+        for i in range(8):
+            metrics_frame.columnconfigure(i, weight=1)
+
         self.metrics = {}
         metrics_data = [
-            ("Всего записей", "total_records", "0", ModernTheme.COLORS['primary'], 0, 0),
-            ("Общий объем продаж", "total_sales", "0 руб.", ModernTheme.COLORS['success'], 0, 1),
-            ("Среднедневной объем", "avg_daily", "0 руб.", ModernTheme.COLORS['warning'], 0, 2),
-            ("Точность модели", "model_accuracy", "N/A", ModernTheme.COLORS['primary'], 0, 3),
-            ("Период данных", "date_range", "N/A", ModernTheme.COLORS['success'], 0, 4),
-            ("Максимальные продажи", "max_sales", "0 руб.", ModernTheme.COLORS['danger'], 0, 5),
-            ("Минимальные продажи", "min_sales", "0 руб.", ModernTheme.COLORS['secondary'], 0, 6),
+            ("Записей", "total_records", "0", ModernTheme.COLORS['primary'], 0, 0),
+            ("Общий объем", "total_sales", "0 руб.", ModernTheme.COLORS['success'], 0, 1),
+            ("Среднедневной", "avg_daily", "0 руб.", ModernTheme.COLORS['warning'], 0, 2),
+            ("MAE", "model_mae", "N/A", ModernTheme.COLORS['primary'], 0, 3),
+            ("Период", "date_range", "N/A", ModernTheme.COLORS['success'], 0, 4),
+            ("Максимум", "max_sales", "0 руб.", ModernTheme.COLORS['danger'], 0, 5),
+            ("Минимум", "min_sales", "0 руб.", ModernTheme.COLORS['secondary'], 0, 6),
+            ("RMSE", "model_rmse", "N/A", ModernTheme.COLORS['warning'], 0, 7)
         ]
 
         for label, key, default, color, row, col in metrics_data:
-            metric_card = ttk.Frame(metrics_frame, style='Card.TFrame', width=200, height=100)
-            metric_card.grid(row=row, column=col, padx=10, pady=10, sticky=(tk.W, tk.E, tk.N, tk.S))
-            metric_card.grid_propagate(False)
+            # УМЕНЬШИЛИ ширину до 120 и убрали grid_propagate(False)
+            metric_card = ttk.Frame(metrics_frame, style='Card.TFrame', height=100)
+            metric_card.grid(row=row, column=col, padx=5, pady=10, sticky="nsew")
             
             label_widget = ttk.Label(metric_card, 
                     text=label, 
@@ -605,7 +600,7 @@ class SalesForecastApp:
             
             # Обновляем точность модели если есть
             if self.model_accuracy:
-                self.update_accuracy_metric()
+                self.update_model_metrics()
 
     def run_forecast(self):
         """Запускает прогнозирование с Random Forest"""
@@ -685,6 +680,26 @@ class SalesForecastApp:
                     self.root.after(0, lambda: messagebox.showerror("Ошибка", "Не удалось создать прогноз"))
                     return
                 
+                model_metrics = self.forecast_engine.get_model_metrics(session_data)
+                
+                # Сохраняем информацию о модели с метриками
+                model_info = {
+                    'model_name': model_metrics['model_name'],
+                    'accuracy': accuracy,
+                    'mae': model_metrics['mae'],
+                    'rmse': model_metrics['rmse'],
+                    'mae_absolute': model_metrics['mae_absolute'],
+                    'rmse_absolute': model_metrics['rmse_absolute'],
+                    'features_used': model_metrics['features_used'],
+                    'training_size': model_metrics['training_size'],
+                    'created_at': model_metrics['created_at']
+                }
+                
+                # Сохраняем информацию о модели
+                if not hasattr(self, 'model_accuracy'):
+                    self.model_accuracy = []
+                self.model_accuracy.append(model_info)
+
                 # АНАЛИЗ РЕЗУЛЬТАТОВ ПРОГНОЗА
                 self.logger.info("РЕЗУЛЬТАТЫ ПРОГНОЗА:")
                 pred_values = [p['predicted_sales'] for p in predictions]
@@ -744,26 +759,13 @@ class SalesForecastApp:
                 
                 # Обновляем интерфейс
                 self.root.after(0, self.update_forecast_chart)
-                self.root.after(0, self.update_accuracy_metric)
+                self.root.after(0, self.update_model_metrics)
                 self.root.after(0, progress.destroy)
                 
                 # Показываем сообщение об успехе с деталями
                 metrics = self.forecast_engine.get_model_metrics(session_data)
-                accuracy_percent = metrics.get('accuracy_percent', (1 - accuracy) * 100)
-                
-                overall_mean = self.processed_data['total_sales'].mean()
-                overall_deviation = ((pred_mean - overall_mean) / overall_mean) * 100
-
-                success_msg = (
-                    f"Прогноз выполнен успешно!\n"
-                    f"• Модель: Точная простая модель\n"
-                    f"• Точность: {accuracy_percent:.1f}%\n"
-                    f"• Средний прогноз: {pred_mean:.0f} руб.\n"
-                    f"• Отклонение от истории: {overall_deviation:+.1f}%"
-                )
-                
-                if abs(overall_deviation) > 5:  # Если отклонение больше 5%
-                    success_msg += f"\n\n⚠️ Внимание: значительное отклонение от исторических данных"
+            
+                success_msg = ("Прогноз выполнен успешно!")
                     
                 self.root.after(0, lambda: messagebox.showinfo("Успех", success_msg))
                 
@@ -794,15 +796,27 @@ class SalesForecastApp:
         except:
             return 0.0
 
-    def update_accuracy_metric(self):
-        """Обновляет метрику точности с расширенной информацией"""
+    def update_model_metrics(self):
+        """Обновляет метрики модели с MAE и RMSE"""
         if self.model_accuracy:
-            session_data = {'model_accuracy': self.model_accuracy}
-            metrics = self.forecast_engine.get_model_metrics(session_data)
-            if metrics:
-                model_name = metrics.get('model_name', 'Unknown')
-                accuracy_text = f"{metrics['accuracy_percent']:.1f}% ({model_name})"
-                self.metrics['model_accuracy'].config(text=accuracy_text)
+            # Берем последнюю модель
+            latest_model = self.model_accuracy[-1]
+            
+            # Обновляем MAE
+            mae = latest_model.get('mae_absolute', 0)
+            if mae > 0:
+                mae_text = f"{mae:.0f} руб."
+            else:
+                mae_text = "N/A"
+            self.metrics['model_mae'].config(text=mae_text)
+            
+            # Обновляем RMSE
+            rmse = latest_model.get('rmse_absolute', 0)
+            if rmse > 0:
+                rmse_text = f"{rmse:.0f} руб."
+            else:
+                rmse_text = "N/A"
+            self.metrics['model_rmse'].config(text=rmse_text)
 
     def clear_data(self):
         """Очищает все данные"""
@@ -837,7 +851,8 @@ class SalesForecastApp:
             self.metrics['avg_daily'].config(text="0 руб.")
             self.metrics['max_sales'].config(text="0 руб.")
             self.metrics['min_sales'].config(text="0 руб.")
-            self.metrics['model_accuracy'].config(text="N/A")
+            self.metrics['model_mae'].config(text="N/A") 
+            self.metrics['model_rmse'].config(text="N/A")  
             self.metrics['date_range'].config(text="N/A")
             
             # Сбрасываем информационные лейблы

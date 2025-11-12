@@ -20,6 +20,7 @@ class SimpleNeuralNetworkEngine:
         self.model_type = "ridge_regression"
         self.model = None
         self.current_file_path = None
+        self.model_metrics = {}  # Добавляем хранение метрик
         
     def train_model(self, session_data: Dict[str, Any], optimize_hyperparams: bool = False) -> Tuple[Any, float]:
         """ТОЧНАЯ КОПИЯ ВАШЕГО КОДА - загружает данные напрямую из CSV"""
@@ -30,7 +31,6 @@ class SimpleNeuralNetworkEngine:
                 self.logger.error("Файл данных не найден")
                 return None, 0.0
 
-            # ТОЧНАЯ КОПИЯ ВАШЕГО КОДА:
             # Загрузка и подготовка
             df = pd.read_csv(file_path, parse_dates=['date'])
             df = df.sort_values('date').reset_index(drop=True)
@@ -76,14 +76,22 @@ class SimpleNeuralNetworkEngine:
             # Предсказания
             y_pred = best_model.predict(X_test)
 
-            # Метрики
+                        # Метрики
             mae = mean_absolute_error(y_test, y_pred)
             rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+            
+            # ВЫЧИСЛЯЕМ В ПРОЦЕНТАХ
+            if y_test.mean() > 0:
+                mae_percent = (mae / y_test.mean()) * 100
+                rmse_percent = (rmse / y_test.mean()) * 100
+            else:
+                mae_percent = 0
+                rmse_percent = 0
 
             self.logger.info(f"Лучший alpha: {grid_search.best_params_['ridge__alpha']}")
             self.logger.info(f"Средняя выручка: {y_test.mean():.2f}")
-            self.logger.info(f"MAE (% от средней): {mae / y_test.mean():.2f}")
-            self.logger.info(f"RMSE (% от средней): {rmse / y_test.mean():.2f}")
+            self.logger.info(f"MAE: {mae:.2f} руб. ({mae_percent:.1f}%)")
+            self.logger.info(f"RMSE: {rmse:.2f} руб. ({rmse_percent:.1f}%)")
 
             # Сохраняем модель
             self.model = best_model
@@ -96,7 +104,8 @@ class SimpleNeuralNetworkEngine:
             
             accuracy = max(0.7, min(0.95, accuracy))
             
-            # Сохраняем информацию о модели
+            # Сохраняем информацию о модели - ВАЖНО: сохраняем проценты!
+                        # Сохраняем информацию о модели
             model_data = {
                 'model_type': 'ridge_regression',
                 'model': self.model,
@@ -104,7 +113,24 @@ class SimpleNeuralNetworkEngine:
                 'training_size': len(X_train),
                 'last_date': df['date'].max(),
                 'best_alpha': grid_search.best_params_['ridge__alpha'],
-                'file_path': file_path  # Сохраняем путь к файлу для прогнозирования
+                'file_path': file_path,
+                'mae': mae_percent,  # В процентах для отчетов
+                'rmse': rmse_percent,  # В процентах для отчетов
+                'mae_absolute': mae,  # АБСОЛЮТНОЕ ЗНАЧЕНИЕ В РУБЛЯХ
+                'rmse_absolute': rmse,  # АБСОЛЮТНОЕ ЗНАЧЕНИЕ В РУБЛЯХ
+                'model_name': 'Ridge Регрессия'
+            }
+            
+            # Сохраняем метрики для использования в отчетах
+            self.model_metrics = {
+                'mae': mae_percent,
+                'rmse': rmse_percent,
+                'mae_absolute': mae,
+                'rmse_absolute': rmse,
+                'model_name': 'Ridge Регрессия',
+                'features_used': 7,
+                'training_size': len(X_train),
+                'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
             
             return model_data, accuracy
@@ -203,12 +229,28 @@ class SimpleNeuralNetworkEngine:
         """Устанавливает текущий путь к файлу данных"""
         self.current_file_path = file_path
 
-    def validate_forecast_consistency(self, predictions: List[Dict], historical_data: pd.DataFrame) -> bool:
-        return True
-
     def get_model_metrics(self, session_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Возвращает метрики модели для использования в отчетах"""
+        # Используем сохраненные метрики или значения по умолчанию
+        if hasattr(self, 'model_metrics') and self.model_metrics:
+            return {
+                'model_name': self.model_metrics.get('model_name', 'Ridge Регрессия'),
+                'mae': self.model_metrics.get('mae', 0),
+                'rmse': self.model_metrics.get('rmse', 0),
+                'mae_absolute': self.model_metrics.get('mae_absolute', 0),
+                'rmse_absolute': self.model_metrics.get('rmse_absolute', 0),
+                'features_used': self.model_metrics.get('features_used', 7),
+                'training_size': self.model_metrics.get('training_size', 'N/A'),
+                'created_at': self.model_metrics.get('created_at', datetime.now().strftime('%Y-%m-%d'))
+            }
+        
         return {
-            'accuracy_percent': 85.0,
             'model_name': 'Ridge Регрессия',
-            'features_used': '7 признаков'
+            'mae': 0,
+            'rmse': 0,
+            'mae_absolute': 0,
+            'rmse_absolute': 0,
+            'features_used': 7,
+            'training_size': 'N/A',
+            'created_at': datetime.now().strftime('%Y-%m-%d')
         }
