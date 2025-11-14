@@ -5,13 +5,11 @@ from jinja2 import Template
 from weasyprint import HTML
 import datetime
 import matplotlib
-# Устанавливаем backend ДО импорта pyplot
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 import logging
-
 logger = logging.getLogger(__name__)
 
 def generate_sales_report(session_data):
@@ -21,7 +19,6 @@ def generate_sales_report(session_data):
         if not processed_data:
             logger.warning("Нет данных для отчета по продажам")
             return None
-            
         df = pd.DataFrame(processed_data)
         
         # Базовая валидация данных
@@ -111,8 +108,6 @@ def generate_full_report(session_data):
     except Exception as e:
         logger.error(f"Ошибка генерации полного отчета: {e}")
         return None
-
-# ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
 
 def _calculate_sales_statistics(df):
     """Вычисляет статистику продаж"""
@@ -206,7 +201,6 @@ def _get_limited_historical_data(processed_data, days=60):
         df = df.sort_values('date').tail(days)
     return df.to_dict('records')
 
-
 def _get_model_info(model_accuracy):
     """Извлекает информацию о модели"""
     if not model_accuracy:
@@ -232,7 +226,6 @@ def _get_model_info(model_accuracy):
         'features_used': latest.get('features_used', 7),
         'training_size': latest.get('training_size', 'N/A')
     }
-
 
 def _create_sales_plot(df, stats):
     """Создает график исторических данных"""
@@ -451,8 +444,6 @@ def _get_month_name(month_num):
         return months[int(month_num)-1]
     return 'Н/Д'
 
-
-
 def _render_forecast_html(forecast_results, model_info, plot_base64):
     """Рендерит улучшенный HTML для отчета по прогнозам"""
     template_str = """
@@ -624,16 +615,16 @@ def _render_forecast_html(forecast_results, model_info, plot_base64):
     <body>
         <div class="container">
             <div class="header">
-                <h1>🔮 Отчет по прогнозированию продаж</h1>
+                <h1>Отчет по прогнозированию продаж</h1>
                 <p style="color: #6b7280; font-size: 15px; margin-top: 5px;">Сгенерирован: {{ generation_date }}</p>
             </div>
             
             <div class="data-info">
-                <strong>📈 Период анализа:</strong> прогноз на {{ forecast_data|length }} дней с {{ format_date(forecast_data[0].date) if forecast_data else 'N/A' }} по {{ format_date(forecast_data[-1].date) if forecast_data else 'N/A' }}
+                <strong>Период анализа:</strong> прогноз на {{ forecast_data|length }} дней с {{ format_date(forecast_data[0].date) if forecast_data else 'N/A' }} по {{ format_date(forecast_data[-1].date) if forecast_data else 'N/A' }}
             </div>
             
             <div class="accuracy-info">
-                <h3>🤖 Информация о модели</h3>
+                <h3>Информация о модели</h3>
                 <div class="model-info-grid">
                     <div class="metric-item">
                         <span>Модель:</span>
@@ -689,7 +680,7 @@ def _render_forecast_html(forecast_results, model_info, plot_base64):
                 </div>
             </div>
             
-            <h2>📊 Детали прогноза</h2>
+            <h2>Детали прогноза</h2>
             <div class="table-container">
                 <table>
                     <thead>
@@ -888,12 +879,12 @@ def _render_sales_html(stats, historical_data, plot_base64):
     <body>
         <div class="container">
             <div class="header">
-                <h1>📊 Отчет по историческим данным продаж</h1>
+                <h1>Отчет по историческим данным продаж</h1>
                 <p style="color: #6b7280; font-size: 15px; margin-top: 5px;">Сгенерирован: {{ generation_date }}</p>
             </div>
             
             <div class="highlight">
-                <strong>📊 Обзор данных:</strong> Анализ продаж за весь период с {{ format_date(historical_data[0].date) if historical_data else 'N/A' }} по {{ format_date(historical_data[-1].date) if historical_data else 'N/A' }}
+                <strong>Обзор данных:</strong> Анализ продаж за весь период с {{ format_date(historical_data[0].date) if historical_data else 'N/A' }} по {{ format_date(historical_data[-1].date) if historical_data else 'N/A' }}
             </div>
             
             {% if plot_base64 %}
@@ -937,7 +928,7 @@ def _render_sales_html(stats, historical_data, plot_base64):
                 </div>
             </div>
             
-            <h2>📈 Исторические данные (первые 20 записей)</h2>
+            <h2>Исторические данные (первые 20 записей)</h2>
             <table>
                 <thead>
                     <tr>
@@ -956,7 +947,7 @@ def _render_sales_html(stats, historical_data, plot_base64):
                         <td>{{ get_day_name_historical(item.day_of_week) }}</td>
                         <td>{{ get_month_name(item.month) }}</td>
                         <td><span style="color: {{ '#ef4444' if item.is_weekend else '#059669' }}; font-weight: bold;">
-                            {{ '✅ Да' if item.is_weekend else '❌ Нет' }}
+                            {{ 'Да' if item.is_weekend else 'Нет' }}
                         </span></td>
                     </tr>
                     {% endfor %}
@@ -1202,18 +1193,18 @@ def _render_full_html(historical_data, forecast_results, hist_stats, fc_stats, m
     <body>
         <div class="container">
             <div class="header">
-                <h1>📊 Полный отчет по прогнозированию продаж</h1>
+                <h1>Полный отчет по прогнозированию продаж</h1>
                 <p style="color: #6b7280; font-size: 15px; margin-top: 5px;">Сгенерирован: {{ generation_date }}</p>
             </div>
             
             <div class="data-info">
-                <strong>📈 Период анализа:</strong> 
+                <strong>Период анализа:</strong> 
                 Исторические данные: {{ hist_stats.total_days }} дней | 
                 Прогноз: {{ fc_stats.days_count }} дней с {{ format_date(forecast_data[0].date) if forecast_data else 'N/A' }}
             </div>
             
             <div class="model-info">
-                <h3>🤖 Информация о модели</h3>
+                <h3>Информация о модели</h3>
                 <div class="model-info-grid">
                     <div class="metric-item">
                         <span>Модель:</span>
@@ -1239,7 +1230,7 @@ def _render_full_html(historical_data, forecast_results, hist_stats, fc_stats, m
             </div>
             
             <div class="summary">
-                <h3>📋 Краткая сводка</h3>
+                <h3>Краткая сводка</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div>
                         <p><strong>Общий объем продаж за исторический период:</strong><br>{{ "%.0f"|format(hist_stats.total_sales) }} руб.</p>
@@ -1267,11 +1258,11 @@ def _render_full_html(historical_data, forecast_results, hist_stats, fc_stats, m
             {% endif %}
             
             <div class="comparison-section">
-                <h3 style="text-align: center;">📊 Сравнительная статистика</h3>
+                <h3 style="text-align: center;">Сравнительная статистика</h3>
                 <div class="vertical-stats">
                     <!-- Исторические данные - вертикальный столбец -->
                     <div class="stats-column">
-                        <div class="column-title historical-title">📅 Исторические данные</div>
+                        <div class="column-title historical-title">Исторические данные</div>
                         <div class="stat-card">
                             <div class="stat-value">{{ "%.0f"|format(hist_stats.total_sales) }} ₽</div>
                             <div class="stat-label">Общий объем продаж</div>
@@ -1302,7 +1293,7 @@ def _render_full_html(historical_data, forecast_results, hist_stats, fc_stats, m
                     
                     <!-- Прогноз - вертикальный столбец -->
                     <div class="stats-column">
-                        <div class="column-title forecast-title">🔮 Прогноз на {{ fc_stats.days_count }} дней</div>
+                        <div class="column-title forecast-title">Прогноз на {{ fc_stats.days_count }} дней</div>
                         <div class="stat-card">
                             <div class="stat-value">{{ "%.0f"|format(fc_stats.total_forecast) }} ₽</div>
                             <div class="stat-label">Общий прогнозируемый объем</div>
@@ -1333,15 +1324,15 @@ def _render_full_html(historical_data, forecast_results, hist_stats, fc_stats, m
 
             {% if fc_stats.total_growth > 0 %}
             <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #10b981;">
-                <strong style="color: #059669;">📈 Положительная динамика:</strong> Прогнозируется рост продаж на {{ "%.1f"|format(fc_stats.total_growth) }}% за период прогноза.
+                <strong style="color: #059669;">Положительная динамика:</strong> Прогнозируется рост продаж на {{ "%.1f"|format(fc_stats.total_growth) }}% за период прогноза.
             </div>
             {% elif fc_stats.total_growth < 0 %}
             <div style="background: #fef2f2; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc2626;">
-                <strong style="color: #dc2626;">📉 Отрицательная динамика:</strong> Прогнозируется снижение продаж на {{ "%.1f"|format(fc_stats.total_growth|abs) }}% за период прогноза.
+                <strong style="color: #dc2626;">Отрицательная динамика:</strong> Прогнозируется снижение продаж на {{ "%.1f"|format(fc_stats.total_growth|abs) }}% за период прогноза.
             </div>
             {% endif %}
             
-            <h2>🔮 Детали прогноза</h2>
+            <h2>Детали прогноза</h2>
             <div class="table-container">
                 <table>
                     <thead>
@@ -1388,15 +1379,15 @@ def _render_full_html(historical_data, forecast_results, hist_stats, fc_stats, m
                             <td>{{ get_day_name_historical(item.day_of_week) }}</td>
                             <td>{{ get_month_name(item.month) }}</td>
                             <td><span style="color: {{ '#ef4444' if item.is_weekend else '#059669' }}; font-weight: bold;">
-                                {{ '✅ Да' if item.is_weekend else '❌ Нет' }}
+                                {{ 'Да' if item.is_weekend else 'Нет' }}
                             </span></td>
                             <td>
                                 {% if item.is_holiday %}
-                                    <span style="color: #f59e0b; font-weight: bold;">🎉 Праздник</span>
+                                    <span style="color: #f59e0b; font-weight: bold;">Праздник</span>
                                 {% elif item.is_weekend %}
-                                    <span style="color: #ef4444; font-weight: bold;">🏖️ Выходной</span>
+                                    <span style="color: #ef4444; font-weight: bold;">Выходной</span>
                                 {% else %}
-                                    <span style="color: #6b7280;">📅 Будний</span>
+                                    <span style="color: #6b7280;">Будний</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -1435,7 +1426,6 @@ def _render_full_html(historical_data, forecast_results, hist_stats, fc_stats, m
         hist_stats=hist_stats,
         fc_stats=fc_stats
     )
-
 
 if __name__ == "__main__":
     print("Модуль генерации отчетов загружен")
