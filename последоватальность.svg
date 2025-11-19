@@ -1,0 +1,258 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="SEQUENCE" height="1800px" preserveAspectRatio="none" style="width:2000px;height:1800px;background:#FFFFFF;" version="1.1" viewBox="0 0 2000 1800" width="2000px" zoomAndPan="magnify">
+    <title>Sales Forecast System - Sequence Diagram</title>
+    <defs/>
+    <g>
+        <text fill="#000000" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="280" x="860" y="40">Sales Forecast System - Sequence Diagram</text>
+        
+        <!-- Participants -->
+        <g class="participant participant-head" data-participant="user">
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="30" x="50" y="100">User</text>
+            <ellipse cx="70" cy="70" fill="#E2E2F0" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/>
+        </g>
+        
+        <g class="participant participant-head" data-participant="gui">
+            <rect fill="#E2E2F0" height="33" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="120" x="150" y="85"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100" x="160" y="107">GUI (Tkinter)</text>
+        </g>
+        
+        <g class="participant participant-head" data-participant="datamanager">
+            <rect fill="#E2E2F0" height="33" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="140" x="350" y="85"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="120" x="360" y="107">Data Manager</text>
+        </g>
+        
+        <g class="participant participant-head" data-participant="mlengine">
+            <rect fill="#E2E2F0" height="33" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="130" x="570" y="85"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="110" x="580" y="107">ML Engine</text>
+        </g>
+        
+        <g class="participant participant-head" data-participant="reportgen">
+            <rect fill="#E2E2F0" height="33" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="150" x="780" y="85"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="130" x="790" y="107">Report Generator</text>
+        </g>
+
+        <!-- Lifelines -->
+        <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="70" x2="70" y1="120" y2="1700"/>
+        <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="210" x2="210" y1="120" y2="1700"/>
+        <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="420" x2="420" y1="120" y2="1700"/>
+        <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="635" x2="635" y1="120" y2="1700"/>
+        <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="855" x2="855" y1="120" y2="1700"/>
+
+        <!-- Phase 1: Data Loading -->
+        <rect fill="#EEEEEE" height="25" style="stroke:#000000;stroke-width:2;" width="300" x="850" y="140"/>
+        <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="280" x="860" y="158">Фаза 1: Загрузка и обработка данных</text>
+
+        <!-- Load CSV File -->
+        <g class="message" data-participant-1="user" data-participant-2="gui">
+            <polygon fill="#181818" points="200,190,210,195,200,200,205,195" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="75" x2="205" y1="195" y2="195"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="120" x="80" y="188">load_csv_file()</text>
+        </g>
+
+        <g class="message" data-participant-1="gui" data-participant-2="datamanager">
+            <polygon fill="#181818" points="400,220,410,225,400,230,405,225" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="215" x2="405" y1="225" y2="225"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="180" x="220" y="218">load_data_from_csv(file_path)</text>
+        </g>
+
+        <g class="message" data-participant-1="datamanager" data-participant-2="datamanager">
+            <line style="stroke:#181818;stroke-width:1;" x1="430" x2="470" y1="250" y2="250"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="470" x2="470" y1="250" y2="265"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="431" x2="470" y1="265" y2="265"/>
+            <polygon fill="#181818" points="441,261,431,265,441,269,437,265" style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="150" x="435" y="245">"Валидация данных"</text>
+        </g>
+
+        <g class="message" data-participant-1="datamanager" data-participant-2="datamanager">
+            <line style="stroke:#181818;stroke-width:1;" x1="430" x2="470" y1="285" y2="285"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="470" x2="470" y1="285" y2="300"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="431" x2="470" y1="300" y2="300"/>
+            <polygon fill="#181818" points="441,296,431,300,441,304,437,300" style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="180" x="435" y="280">"Создание расширенных признаков"</text>
+        </g>
+
+        <g class="message" data-participant-1="datamanager" data-participant-2="gui">
+            <polygon fill="#181818" points="220,320,210,325,220,330,215,325" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="215" x2="415" y1="325" y2="325"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="100" x="225" y="318">processed_data</text>
+        </g>
+
+        <g class="message" data-participant-1="gui" data-participant-2="gui">
+            <line style="stroke:#181818;stroke-width:1;" x1="220" x2="260" y1="350" y2="350"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="260" x2="260" y1="350" y2="365"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="221" x2="260" y1="365" y2="365"/>
+            <polygon fill="#181818" points="231,361,221,365,231,369,227,365" style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="120" x="225" y="345">"Обновление интерфейса"</text>
+        </g>
+
+        <!-- Phase 2: Model Training -->
+        <rect fill="#EEEEEE" height="25" style="stroke:#000000;stroke-width:2;" width="280" x="860" y="390"/>
+        <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="260" x="870" y="408">Фаза 2: Обучение модели</text>
+
+        <g class="message" data-participant-1="user" data-participant-2="gui">
+            <polygon fill="#181818" points="200,440,210,445,200,450,205,445" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="75" x2="205" y1="445" y2="445"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="150" x="80" y="438">run_forecast()</text>
+        </g>
+
+        <g class="message" data-participant-1="gui" data-participant-2="mlengine">
+            <polygon fill="#181818" points="615,470,625,475,615,480,620,475" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="215" x2="620" y1="475" y2="475"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="200" x="220" y="468">train_model(session_data)</text>
+        </g>
+
+        <g class="message" data-participant-1="mlengine" data-participant-2="mlengine">
+            <line style="stroke:#181818;stroke-width:1;" x1="645" x2="685" y1="500" y2="500"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="685" x2="685" y1="500" y2="515"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="646" x2="685" y1="515" y2="515"/>
+            <polygon fill="#181818" points="656,511,646,515,656,519,652,515" style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="160" x="650" y="495">"Ridge Regression"</text>
+        </g>
+
+        <g class="message" data-participant-1="mlengine" data-participant-2="mlengine">
+            <line style="stroke:#181818;stroke-width:1;" x1="645" x2="685" y1="535" y2="535"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="685" x2="685" y1="535" y2="550"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="646" x2="685" y1="550" y2="550"/>
+            <polygon fill="#181818" points="656,546,646,550,656,554,652,550" style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="140" x="650" y="530">"GridSearchCV tuning"</text>
+        </g>
+
+        <g class="message" data-participant-1="mlengine" data-participant-2="gui">
+            <polygon fill="#181818" points="220,570,210,575,220,580,215,575" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="215" x2="630" y1="575" y2="575"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="120" x="225" y="568">model, accuracy</text>
+        </g>
+
+        <!-- Phase 3: Prediction -->
+        <rect fill="#EEEEEE" height="25" style="stroke:#000000;stroke-width:2;" width="250" x="875" y="610"/>
+        <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="230" x="885" y="628">Фаза 3: Прогнозирование</text>
+
+        <g class="message" data-participant-1="gui" data-participant-2="mlengine">
+            <polygon fill="#181818" points="615,660,625,665,615,670,620,665" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="215" x2="620" y1="665" y2="665"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="220" x="220" y="658">make_predictions(model, days=7)</text>
+        </g>
+
+        <g class="message" data-participant-1="mlengine" data-participant-2="mlengine">
+            <line style="stroke:#181818;stroke-width:1;" x1="645" x2="685" y1="690" y2="690"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="685" x2="685" y1="690" y2="705"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="646" x2="685" y1="705" y2="705"/>
+            <polygon fill="#181818" points="656,701,646,705,656,709,652,705" style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="180" x="650" y="685">"Генерация прогноза"</text>
+        </g>
+
+        <g class="message" data-participant-1="mlengine" data-participant-2="mlengine">
+            <line style="stroke:#181818;stroke-width:1;" x1="645" x2="685" y1="725" y2="725"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="685" x2="685" y1="725" y2="740"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="646" x2="685" y1="740" y2="740"/>
+            <polygon fill="#181818" points="656,736,646,740,656,744,652,740" style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="200" x="650" y="720">"Расчет доверительных интервалов"</text>
+        </g>
+
+        <g class="message" data-participant-1="mlengine" data-participant-2="gui">
+            <polygon fill="#181818" points="220,760,210,765,220,770,215,765" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="215" x2="630" y1="765" y2="765"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="150" x="225" y="758">forecast_results</text>
+        </g>
+
+        <g class="message" data-participant-1="gui" data-participant-2="gui">
+            <line style="stroke:#181818;stroke-width:1;" x1="220" x2="260" y1="790" y2="790"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="260" x2="260" y1="790" y2="805"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="221" x2="260" y1="805" y2="805"/>
+            <polygon fill="#181818" points="231,801,221,805,231,809,227,805" style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="140" x="225" y="785">"Обновление графиков"</text>
+        </g>
+
+        <!-- Phase 4: Report Generation -->
+        <rect fill="#EEEEEE" height="25" style="stroke:#000000;stroke-width:2;" width="300" x="850" y="830"/>
+        <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="280" x="860" y="848">Фаза 4: Генерация отчетов</text>
+
+        <g class="message" data-participant-1="user" data-participant-2="gui">
+            <polygon fill="#181818" points="200,880,210,885,200,890,205,885" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="75" x2="205" y1="885" y2="885"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="180" x="80" y="878">generate_full_report()</text>
+        </g>
+
+        <g class="message" data-participant-1="gui" data-participant-2="reportgen">
+            <polygon fill="#181818" points="835,910,845,915,835,920,840,915" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="215" x2="840" y1="915" y2="915"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="220" x="220" y="908">generate_full_report(session_data)</text>
+        </g>
+
+        <g class="message" data-participant-1="reportgen" data-participant-2="reportgen">
+            <line style="stroke:#181818;stroke-width:1;" x1="865" x2="905" y1="940" y2="940"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="905" x2="905" y1="940" y2="955"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="866" x2="905" y1="955" y2="955"/>
+            <polygon fill="#181818" points="876,951,866,955,876,959,872,955" style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="120" x="870" y="935">"Создание графиков"</text>
+        </g>
+
+        <g class="message" data-participant-1="reportgen" data-participant-2="reportgen">
+            <line style="stroke:#181818;stroke-width:1;" x1="865" x2="905" y1="975" y2="975"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="905" x2="905" y1="975" y2="990"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="866" x2="905" y1="990" y2="990"/>
+            <polygon fill="#181818" points="876,986,866,990,876,994,872,990" style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="150" x="870" y="970">"Генерация HTML"</text>
+        </g>
+
+        <g class="message" data-participant-1="reportgen" data-participant-2="reportgen">
+            <line style="stroke:#181818;stroke-width:1;" x1="865" x2="905" y1="1010" y2="1010"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="905" x2="905" y1="1010" y2="1025"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="866" x2="905" y1="1025" y2="1025"/>
+            <polygon fill="#181818" points="876,1021,866,1025,876,1029,872,1025" style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="120" x="870" y="1005">"Конвертация в PDF"</text>
+        </g>
+
+        <g class="message" data-participant-1="reportgen" data-participant-2="gui">
+            <polygon fill="#181818" points="220,1045,210,1050,220,1055,215,1050" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="215" x2="850" y1="1050" y2="1050"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="100" x="225" y="1043">pdf_buffer</text>
+        </g>
+
+        <!-- Alternative Flows -->
+        <rect fill="#EEEEEE" height="25" style="stroke:#000000;stroke-width:2;" width="320" x="840" y="1080"/>
+        <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="300" x="850" y="1098">Альтернативные потоки</text>
+
+        <!-- Error Handling -->
+        <g class="message" data-participant-1="datamanager" data-participant-2="gui">
+            <polygon fill="#181818" points="220,1130,210,1135,220,1140,215,1135" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="215" x2="415" y1="1135" y2="1135"/>
+            <text fill="#FF0000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="120" x="225" y="1128">validation_error</text>
+        </g>
+
+        <g class="message" data-participant-1="gui" data-participant-2="user">
+            <polygon fill="#181818" points="80,1160,70,1165,80,1170,75,1165" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="75" x2="215" y1="1165" y2="1165"/>
+            <text fill="#FF0000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="180" x="85" y="1158">show_error_message()</text>
+        </g>
+
+        <!-- Model Training Failure -->
+        <g class="message" data-participant-1="mlengine" data-participant-2="gui">
+            <polygon fill="#181818" points="220,1195,210,1200,220,1205,215,1200" style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="215" x2="630" y1="1200" y2="1200"/>
+            <text fill="#FF0000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="140" x="225" y="1193">training_failed</text>
+        </g>
+
+        <!-- Notes -->
+        <rect fill="#FEFFDD" height="120" style="stroke:#181818;stroke-width:0.5;" width="350" x="50" y="1250"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="330" x="60" y="1270">Data Manager Features:</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="60" y="1290">- Валидация CSV файлов</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="60" y="1310">- Создание расширенных признаков</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="60" y="1330">- Обработка праздников (RU)</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="60" y="1350">- Статистический анализ</text>
+
+        <rect fill="#FEFFDD" height="120" style="stroke:#181818;stroke-width:0.5;" width="350" x="450" y="1250"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="330" x="460" y="1270">ML Engine Features:</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="460" y="1290">- Ridge Regression с GridSearch</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="460" y="1310">- Time Series Cross-Validation</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="460" y="1330">- Доверительные интервалы</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="460" y="1350">- Метрики: MAE, RMSE</text>
+
+        <rect fill="#FEFFDD" height="120" style="stroke:#181818;stroke-width:0.5;" width="350" x="850" y="1250"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="330" x="860" y="1270">Report Generator Features:</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="860" y="1290">- HTML шаблоны (Jinja2)</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="860" y="1310">- Matplotlib графики</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="860" y="1330">- PDF генерация (WeasyPrint)</text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="320" x="860" y="1350">- Статистические сводки</text>
+
+    </g>
+</svg>
