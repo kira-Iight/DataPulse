@@ -329,15 +329,10 @@ class SalesForecastApp:
         self.stats_frame = ttk.Frame(self.notebook, padding=15)
         self.notebook.add(self.stats_frame, text="Статистика")
         
-        # Вкладка "Информация"
-        self.info_frame = ttk.Frame(self.notebook, padding=15)
-        self.notebook.add(self.info_frame, text="Информация")
-        
         # Заполняем вкладки
         self.create_data_tab()
         self.create_forecast_tab()
         self.create_stats_tab()
-        self.create_info_tab()
         
     def create_data_tab(self):
         """Создает вкладку с данными"""
@@ -479,27 +474,6 @@ class SalesForecastApp:
         self.stats_canvas = FigureCanvasTkAgg(self.stats_fig, card_frame)
         self.stats_canvas.draw()
         self.stats_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-   
-    def create_info_tab(self):
-        """Создает информационную вкладку"""
-        # Карточка с информацией
-        card_frame = ttk.Frame(self.info_frame, style='Card.TFrame')
-        card_frame.pack(fill=tk.BOTH, expand=True, padx=50, pady=50)
-        
-        info_text = """
-        DataPulse
-        """
-        
-        text_widget = tk.Text(card_frame, 
-                             wrap=tk.WORD, 
-                             font=ModernTheme.FONTS['normal'],
-                             borderwidth=0,
-                             padx=20,
-                             pady=20)
-        
-        text_widget.insert(tk.END, info_text)
-        text_widget.config(state=tk.DISABLED)
-        text_widget.pack(fill=tk.BOTH, expand=True)
     
     def load_csv_file(self):
         """Загружает CSV файл с данными продаж"""        

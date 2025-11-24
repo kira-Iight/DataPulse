@@ -9814,3 +9814,5 @@
 2025-11-14 11:58:10 - fontTools.subset - INFO - CFF  pruned
 2025-11-14 11:58:10 - fontTools.subset - INFO - name pruned
 2025-11-14 11:58:17 - __main__ - INFO - Полный отчет сохранен: /Users/nayeon/Downloads/3.pdf
+2025-11-23 17:50:15 - root - INFO - Система логирования инициализирована
+2025-11-24 00:47:35 - root - INFO - Система логирования инициализирована
