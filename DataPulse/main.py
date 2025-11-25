@@ -15,7 +15,7 @@ from config import AppConfig, DataValidationRules
 from data_manager import DataManager
 from ml_engine import SimpleNeuralNetworkEngine
 from logging_config import setup_logging
-from report_generator import generate_sales_report, generate_forecast_report, generate_full_report
+from report_generator import ReportGenerator
 setup_logging()
 
 class ModernTheme:
@@ -35,6 +35,7 @@ class SalesForecastApp:
         # Инициализируем менеджеры
         self.data_manager = DataManager()
         self.forecast_engine = SimpleNeuralNetworkEngine()
+        self.report_generator = ReportGenerator()
         self.logger = logging.getLogger(__name__)
         
         # Устанавливаем иконку приложения
@@ -851,7 +852,7 @@ class SalesForecastApp:
                 if hasattr(item['date'], 'strftime'):
                     item['date'] = item['date'].strftime('%Y-%m-%d')
             
-            pdf_buffer = generate_sales_report(session_data)
+            pdf_buffer = self.report_generator.generate_sales_report(session_data)
             
             if pdf_buffer:
                 # Сохраняем файл
@@ -886,7 +887,7 @@ class SalesForecastApp:
                 'model_accuracy': self.model_accuracy
             }
             
-            pdf_buffer = generate_forecast_report(session_data)
+            pdf_buffer = self.report_generator.generate_forecast_report(session_data)
             
             if pdf_buffer:
                 file_path = filedialog.asksaveasfilename(
@@ -926,7 +927,7 @@ class SalesForecastApp:
                 if hasattr(item['date'], 'strftime'):
                     item['date'] = item['date'].strftime('%Y-%m-%d')
             
-            pdf_buffer = generate_full_report(session_data)
+            pdf_buffer = self.report_generator.generate_full_report(session_data)
             
             if pdf_buffer:
                 file_path = filedialog.asksaveasfilename(
