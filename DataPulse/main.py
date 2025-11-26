@@ -13,7 +13,7 @@ import numpy as np
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from config import AppConfig, DataValidationRules
 from data_manager import DataManager
-from ml_engine import SimpleNeuralNetworkEngine
+from ml_engine import RidgeRegressionEngine
 from logging_config import setup_logging
 from report_generator import ReportGenerator
 setup_logging()
@@ -34,7 +34,7 @@ class SalesForecastApp:
         
         # Инициализируем менеджеры
         self.data_manager = DataManager()
-        self.forecast_engine = SimpleNeuralNetworkEngine()
+        self.forecast_engine = RidgeRegressionEngine()
         self.report_generator = ReportGenerator()
         self.logger = logging.getLogger(__name__)
         

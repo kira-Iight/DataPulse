@@ -14,7 +14,7 @@ import os
 
 warnings.filterwarnings('ignore')
 
-class SimpleNeuralNetworkEngine:
+class RidgeRegressionEngine:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.model_type = "ridge_regression"
