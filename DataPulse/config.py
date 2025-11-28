@@ -52,11 +52,11 @@ class AppConfig:
     }
     
     FONTS = {
-        'title': ('Arial', 16, 'bold'),
-        'subtitle': ('Arial', 12, 'bold'),
-        'normal': ('Arial', 10),
-        'small': ('Arial', 9),
-        'metric': ('Arial', 14, 'bold')
+        'title': ('Segoe UI', 16, 'bold'),
+        'subtitle': ('Segoe UI', 12, 'bold'),
+        'normal': ('Segoe UI', 10),
+        'small': ('Segoe UI', 9),
+        'metric': ('Segoe UI', 14, 'bold')
     }
 
 class DataValidationRules:

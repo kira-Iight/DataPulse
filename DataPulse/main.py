@@ -5,7 +5,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import os
-import platform
 import sys
 from datetime import datetime
 import threading
@@ -30,17 +29,20 @@ class SalesForecastApp:
         self.root.title("DataPulse")
         self.root.geometry("1400x900")
         
-        # Инициализируем менеджеры и логгер ПЕРВЫМИ
+        # Устанавливаем цвет фона через configure
+        self.root.configure(bg=ModernTheme.COLORS['background'])
+        
+        # Инициализируем менеджеры
         self.data_manager = DataManager()
         self.forecast_engine = RidgeRegressionEngine()
         self.report_generator = ReportGenerator()
         self.logger = logging.getLogger(__name__)
         
-        # Устанавливаем иконку ДО настройки стилей
-        self._setup_icon()
-        
-        # Устанавливаем цвет фона
-        self.root.configure(bg=ModernTheme.COLORS['background'])
+        # Устанавливаем иконку приложения
+        try:
+            self.root.iconbitmap('icon.ico')
+        except:
+            pass
         
         # Настраиваем стили
         self.setup_styles()
@@ -55,83 +57,26 @@ class SalesForecastApp:
         # Создаем интерфейс
         self.create_widgets()
                 
-    def _setup_icon(self):
-        """Кросс-платформенная установка иконки"""
-        try:
-            if os.name == 'nt':  # Windows
-                # Для Windows используем .ico
-                if os.path.exists('icon.ico'):
-                    self.root.iconbitmap('icon.ico')
-                else:
-                    self.logger.warning("Файл icon.ico не найден")
-            else:  # Mac/Linux
-                # Для Mac/Linux используем PNG
-                icon_path = self._find_icon_file()
-                if icon_path:
-                    img = tk.PhotoImage(file=icon_path)
-                    self.root.iconphoto(True, img)
-                else:
-                    self.logger.warning("Файл иконки не найден")
-        except Exception as e:
-            self.logger.warning(f"Не удалось установить иконку: {e}")
-
-    def _find_icon_file(self):
-        """Поиск файла иконки в разных форматах"""
-        possible_icons = ['icon.png', 'icon.gif', 'icon.ppm', '../icon.png', 'icon.jpg']
-        for icon_file in possible_icons:
-            if os.path.exists(icon_file):
-                self.logger.info(f"Найдена иконка: {icon_file}")
-                return icon_file
-        return None
-
     def setup_styles(self):
         """Настраивает современные стили для виджетов"""
         style = ttk.Style()
         
-        # Современная тема (кроссплатформенная)
-        available_themes = style.theme_names()
-        if 'clam' in available_themes:
-            style.theme_use('clam')
-        elif 'vista' in available_themes and os.name == 'nt':  # Windows
-            style.theme_use('vista')
-        elif 'aqua' in available_themes and platform.system() == 'Darwin':  # Mac
-            style.theme_use('aqua')
-        else:
-            style.theme_use('default')  # Фолбэк тема
+        # Современная тема
+        style.theme_use('clam')
         
         # Настраиваем цвета
         style.configure('TFrame', background=ModernTheme.COLORS['background'])
-        style.configure('TLabel', 
-                       font=ModernTheme.FONTS['normal'], 
-                       background=ModernTheme.COLORS['card'])
-        style.configure('Title.TLabel', 
-                       font=ModernTheme.FONTS['title'], 
-                       background=ModernTheme.COLORS['background'])
-        style.configure('T.TLabel', 
-                       font=ModernTheme.FONTS['title'], 
-                       background=ModernTheme.COLORS['light'], 
-                       foreground=ModernTheme.COLORS['dark']) 
-        style.configure('TButton', 
-                       font=ModernTheme.FONTS['normal'], 
-                       padding=6)
-        style.configure('Primary.TButton', 
-                       background=ModernTheme.COLORS['primary'], 
-                       foreground='white')
-        style.configure('Secondary.TButton', 
-                       background=ModernTheme.COLORS['secondary'], 
-                       foreground='white')
-        style.configure('Success.TButton', 
-                       background=ModernTheme.COLORS['success'], 
-                       foreground='white')
-        style.configure('Warning.TButton', 
-                       background=ModernTheme.COLORS['warning'], 
-                       foreground='white')
+        style.configure('TLabel', font=ModernTheme.FONTS['normal'], background=ModernTheme.COLORS['card'])
+        style.configure('Title.TLabel', font=ModernTheme.FONTS['title'], background=ModernTheme.COLORS['background'])
+        style.configure('T.TLabel', font=ModernTheme.FONTS['title'], background=ModernTheme.COLORS['light'], foreground=ModernTheme.COLORS['dark']) 
+        style.configure('TButton', font=ModernTheme.FONTS['normal'], padding=6)
+        style.configure('Primary.TButton', background=ModernTheme.COLORS['primary'], foreground='white')
+        style.configure('Secondary.TButton', background=ModernTheme.COLORS['secondary'], foreground='white')
+        style.configure('Success.TButton', background=ModernTheme.COLORS['success'], foreground='white')
+        style.configure('Warning.TButton', background=ModernTheme.COLORS['warning'], foreground='white')
         
         # Стиль для карточек
-        style.configure('Card.TFrame', 
-                       background=ModernTheme.COLORS['card'], 
-                       relief='raised', 
-                       borderwidth=1)
+        style.configure('Card.TFrame', background=ModernTheme.COLORS['card'], relief='raised', borderwidth=1)
         
         # Стиль для Treeview
         style.configure('Treeview', 
@@ -151,9 +96,7 @@ class SalesForecastApp:
                  background=[('active', ModernTheme.COLORS['primary_light'])])
         
         # Настройка Notebook
-        style.configure('TNotebook', 
-                       background=ModernTheme.COLORS['background'], 
-                       borderwidth=0)
+        style.configure('TNotebook', background=ModernTheme.COLORS['background'], borderwidth=0)
         style.configure('TNotebook.Tab', 
                        background=ModernTheme.COLORS['secondary'],
                        foreground='white',

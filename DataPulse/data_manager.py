@@ -143,24 +143,10 @@ class DataManager:
     """Менеджер для работы с данными"""
     
     def __init__(self):
-        # Инициализация конфигурации ОДИН РАЗ
-        self.config = AppConfig()
+        self.logger = logging.getLogger(__name__)
         self.validation_rules = DataValidationRules()
         self.feature_engineer = AdvancedFeatureEngineer()
-        self.logger = logging.getLogger(__name__)
-        
-        # Кросс-платформенные пути
-        self.logs_dir = os.path.join(os.getcwd(), self.config.LOGS_DIR)
-        self.cache_dir = os.path.join(os.getcwd(), self.config.CACHE_DIR)
-        self.models_dir = os.path.join(os.getcwd(), self.config.MODELS_DIR)
-        
-        # Создаем директории
-        self._create_directories()
-
-    def _create_directories(self):
-        """Создает необходимые директории"""
-        for directory in [self.logs_dir, self.cache_dir, self.models_dir]:
-            os.makedirs(directory, exist_ok=True)
+        self.config = AppConfig()
     
     def load_data_from_csv(self, file_path: str) -> pd.DataFrame:
         """Загружает данные из CSV файла с валидацией"""

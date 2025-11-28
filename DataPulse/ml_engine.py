@@ -11,8 +11,6 @@ from sklearn.pipeline import make_pipeline
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
 import os
-import platform
-import tempfile
 
 warnings.filterwarnings('ignore')
 
@@ -23,37 +21,15 @@ class RidgeRegressionEngine:
         self.model = None
         self.current_file_path = None
         self.model_metrics = {}  # Добавляем хранение метрик
-        self._setup_model_directories()
-
-    def _setup_model_directories(self):
-        """Настройка кросс-платформенных путей для моделей"""
-        try:
-            # Используем temp directory для кэша моделей
-            if platform.system() == 'Windows':
-                self.cache_dir = os.path.join(tempfile.gettempdir(), 'DataPulse', 'models')
-            else:  # Mac/Linux
-                self.cache_dir = os.path.expanduser('~/.datapulse/models')
-            
-            os.makedirs(self.cache_dir, exist_ok=True)
-            self.logger.info(f"Директория для моделей: {self.cache_dir}")
-            
-        except Exception as e:
-            self.logger.warning(f"Не удалось создать директорию для моделей: {e}")
-            # Фолбэк на текущую директорию
-            self.cache_dir = os.path.join(os.getcwd(), 'models')
-            os.makedirs(self.cache_dir, exist_ok=True)
-    
+        
     def train_model(self, session_data: Dict[str, Any], optimize_hyperparams: bool = False) -> Tuple[Any, float]:
+        """ТОЧНАЯ КОПИЯ ВАШЕГО КОДА - загружает данные напрямую из CSV"""
         try:
             # Получаем путь к файлу из session_data или используем последний загруженный
             file_path = session_data.get('current_file_path', self.current_file_path)
             if not file_path or not os.path.exists(file_path):
-                self.logger.error(f"Файл данных не найден: {file_path}")
+                self.logger.error("Файл данных не найден")
                 return None, 0.0
-            
-            # АБСОЛЮТНЫЙ ПУТЬ ДЛЯ НАДЕЖНОСТИ
-            file_path = os.path.abspath(file_path)
-            self.logger.info(f"Загрузка данных из: {file_path}")
 
             # Загрузка и подготовка
             df = pd.read_csv(file_path, parse_dates=['date'])
@@ -174,12 +150,8 @@ class RidgeRegressionEngine:
             file_path = model.get('file_path', self.current_file_path)
             
             if not file_path or not os.path.exists(file_path):
-                self.logger.error(f"Файл данных не найден для прогнозирования: {file_path}")
+                self.logger.error("Файл данных не найден для прогнозирования")
                 return []
-
-            # АБСОЛЮТНЫЙ ПУТЬ
-            file_path = os.path.abspath(file_path)
-            self.logger.info(f"Прогнозирование на основе: {file_path}")
 
             # ТОЧНАЯ КОПИЯ ВАШЕГО КОДА ДЛЯ ПРОГНОЗА:
             df = pd.read_csv(file_path, parse_dates=['date'])
@@ -254,16 +226,8 @@ class RidgeRegressionEngine:
             return []
 
     def set_current_file_path(self, file_path: str):
-        """Устанавливает текущий путь к файлу данных с валидацией"""
-        try:
-            if file_path and os.path.exists(file_path):
-                self.current_file_path = os.path.abspath(file_path)
-                self.logger.info(f"Установлен путь к данным: {self.current_file_path}")
-            else:
-                self.logger.warning(f"Файл не существует: {file_path}")
-                self.current_file_path = None
-        except Exception as e:
-            self.logger.error(f"Ошибка установки пути к файлу: {e}")
+        """Устанавливает текущий путь к файлу данных"""
+        self.current_file_path = file_path
 
     def get_model_metrics(self, session_data: Dict[str, Any]) -> Dict[str, Any]:
         """Возвращает метрики модели для использования в отчетах"""
