@@ -7,8 +7,9 @@ def setup_logging(logs_dir="logs", app_name="sales_forecast"):
     """Настраивает систему логирования с обработкой ошибок"""
     
     try:
-        # Создаем директорию для логов
+        logs_dir = os.path.abspath(logs_dir)
         os.makedirs(logs_dir, exist_ok=True)
+
         
         # Форматтер
         formatter = logging.Formatter(
