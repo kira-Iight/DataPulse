@@ -20,7 +20,7 @@ def setup_logging(logs_dir="logs", app_name="sales_forecast"):
         log_file = os.path.join(logs_dir, f'{app_name}.log')
         file_handler = RotatingFileHandler(
             filename=log_file,
-            maxBytes=5 * 1024 * 1024,  # 5MB
+            maxBytes=5 * 1024 * 1024, 
             backupCount=3,
             encoding='utf-8'
         )
@@ -52,7 +52,6 @@ def setup_logging(logs_dir="logs", app_name="sales_forecast"):
         return True
         
     except Exception as e:
-        # Fallback: базовая настройка
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(levelname)s - %(message)s',

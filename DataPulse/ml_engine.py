@@ -20,12 +20,10 @@ class RidgeRegressionEngine:
         self.model_type = "ridge_regression"
         self.model = None
         self.current_file_path = None
-        self.model_metrics = {}  # Добавляем хранение метрик
+        self.model_metrics = {}  
         
     def train_model(self, session_data: Dict[str, Any], optimize_hyperparams: bool = False) -> Tuple[Any, float]:
-        """ТОЧНАЯ КОПИЯ ВАШЕГО КОДА - загружает данные напрямую из CSV"""
         try:
-            # Получаем путь к файлу из session_data или используем последний загруженный
             file_path = session_data.get('current_file_path', self.current_file_path)
             if not file_path or not os.path.exists(file_path):
                 self.logger.error("Файл данных не найден")
@@ -47,7 +45,6 @@ class RidgeRegressionEngine:
             X = df_clean[['day_of_week', 'price', 'day_index', 'revenue_lag_1', 'revenue_lag_2', 'revenue_ma_3', 'revenue_ma_7']]
             y = df_clean['revenue']
 
-            # Разделение с ограничением 30 дней (тренировочные и тестовые)
             test_size = 7
             total_size = len(X)
 
@@ -64,7 +61,6 @@ class RidgeRegressionEngine:
             X_test = X.iloc[-test_size:]
             y_test = y.iloc[-test_size:]
 
-            # Подбор гиперпараметра alpha с TimeSeriesSplit
             tscv = TimeSeriesSplit(n_splits=3)
             param_grid = {'ridge__alpha': [0.1, 1.0, 10.0, 100.0]}
             model = make_pipeline(StandardScaler(), Ridge())
@@ -75,12 +71,9 @@ class RidgeRegressionEngine:
 
             # Предсказания
             y_pred = best_model.predict(X_test)
-
-                        # Метрики
             mae = mean_absolute_error(y_test, y_pred)
             rmse = np.sqrt(mean_squared_error(y_test, y_pred))
             
-            # ВЫЧИСЛЯЕМ В ПРОЦЕНТАХ
             if y_test.mean() > 0:
                 mae_percent = (mae / y_test.mean()) * 100
                 rmse_percent = (rmse / y_test.mean()) * 100
@@ -104,8 +97,6 @@ class RidgeRegressionEngine:
             
             accuracy = max(0.7, min(0.95, accuracy))
             
-            # Сохраняем информацию о модели - ВАЖНО: сохраняем проценты!
-                        # Сохраняем информацию о модели
             model_data = {
                 'model_type': 'ridge_regression',
                 'model': self.model,
@@ -114,14 +105,13 @@ class RidgeRegressionEngine:
                 'last_date': df['date'].max(),
                 'best_alpha': grid_search.best_params_['ridge__alpha'],
                 'file_path': file_path,
-                'mae': mae_percent,  # В процентах для отчетов
-                'rmse': rmse_percent,  # В процентах для отчетов
-                'mae_absolute': mae,  # АБСОЛЮТНОЕ ЗНАЧЕНИЕ В РУБЛЯХ
-                'rmse_absolute': rmse,  # АБСОЛЮТНОЕ ЗНАЧЕНИЕ В РУБЛЯХ
+                'mae': mae_percent, 
+                'rmse': rmse_percent, 
+                'mae_absolute': mae,  
+                'rmse_absolute': rmse,  
                 'model_name': 'Ridge Регрессия'
             }
             
-            # Сохраняем метрики для использования в отчетах
             self.model_metrics = {
                 'mae': mae_percent,
                 'rmse': rmse_percent,
@@ -152,12 +142,9 @@ class RidgeRegressionEngine:
             if not file_path or not os.path.exists(file_path):
                 self.logger.error("Файл данных не найден для прогнозирования")
                 return []
-
-            # ТОЧНАЯ КОПИЯ ВАШЕГО КОДА ДЛЯ ПРОГНОЗА:
             df = pd.read_csv(file_path, parse_dates=['date'])
             df = df.sort_values('date').reset_index(drop=True)
             
-            # СОЗДАЕМ ВСЕ ПРИЗНАКИ КАК ПРИ ОБУЧЕНИИ
             df['revenue'] = df['quantity'] * df['price']
             df['day_of_week'] = df['date'].dt.dayofweek
             df['day_index'] = np.arange(len(df))  # Тренд - ВАЖНО!
@@ -174,7 +161,7 @@ class RidgeRegressionEngine:
 
             for i in range(7):
                 next_date = current_data['date'].iloc[-1] + pd.Timedelta(days=1)
-                day_index = current_data['day_index'].iloc[-1] + 1  # Продолжаем индекс
+                day_index = current_data['day_index'].iloc[-1] + 1  
                 day_of_week = next_date.dayofweek
                 price = current_data['price'].iloc[-1]
                 revenue_lag_1 = current_data['revenue'].iloc[-1]
@@ -186,7 +173,7 @@ class RidgeRegressionEngine:
                     'date': next_date,
                     'day_of_week': day_of_week,
                     'price': price,
-                    'day_index': day_index,  # Теперь day_index существует
+                    'day_index': day_index, 
                     'revenue_lag_1': revenue_lag_1,
                     'revenue_lag_2': revenue_lag_2,
                     'revenue_ma_3': revenue_ma_3,
@@ -198,12 +185,10 @@ class RidgeRegressionEngine:
                 pred = max(0, pred)
 
                 new_row['revenue'] = pred
-                # Добавляем day_index в текущие данные для следующей итерации
                 new_row_df = pd.DataFrame([new_row])
                 current_data = pd.concat([current_data, new_row_df], ignore_index=True)
                 predictions.append(pred)
 
-            # Форматируем результат для совместимости
             forecast_results = []
             for i, (date, pred) in enumerate(zip(future_dates, predictions)):
                 forecast_results.append({
@@ -231,7 +216,6 @@ class RidgeRegressionEngine:
 
     def get_model_metrics(self, session_data: Dict[str, Any]) -> Dict[str, Any]:
         """Возвращает метрики модели для использования в отчетах"""
-        # Используем сохраненные метрики или значения по умолчанию
         if hasattr(self, 'model_metrics') and self.model_metrics:
             return {
                 'model_name': self.model_metrics.get('model_name', 'Ridge Регрессия'),

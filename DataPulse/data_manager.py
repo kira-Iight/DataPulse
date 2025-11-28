@@ -17,20 +17,10 @@ class AdvancedFeatureEngineer:
     def create_advanced_features(self, df: pd.DataFrame) -> pd.DataFrame:
         """Создает расширенные признаки из базовых данных"""
         df = df.copy()
-        
-        # 1. Сначала создаем базовые признаки из date
         df = self._create_basic_features(df)
-        
-        # 2. Расширенные временные признаки
         df = self._create_temporal_features(df)
-        
-        # 3. Сезонные и циклические признаки
         df = self._create_seasonal_features(df)
-        
-        # 4. Праздничные и календарные признаки
         df = self._create_calendar_features(df)
-        
-        # 5. Статистические признаки
         df = self._create_statistical_features(df)
         
         return df

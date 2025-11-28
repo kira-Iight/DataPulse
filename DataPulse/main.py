@@ -191,22 +191,18 @@ class SalesForecastApp:
                         color=ModernTheme.COLORS['success'],
                         markersize=6)
                 
-                # ДОВЕРИТЕЛЬНЫЕ ИНТЕРВАЛЫ - БЕЗ ОГРАНИЧЕНИЙ
                 if 'confidence_interval' in forecasts[0]:
                     upper_bound = [pred['confidence_interval']['upper'] for pred in forecasts]
                     lower_bound = [pred['confidence_interval']['lower'] for pred in forecasts]
                     
-                    # Берем РЕАЛЬНЫЕ значения из расчета БЕЗ ИСКУССТВЕННЫХ ОГРАНИЧЕНИЙ
                     uncertainty_pct = forecasts[0]['confidence_interval']['uncertainty_pct']
                     confidence_level = forecasts[0]['confidence_interval']['confidence_level']
                     
-                    # ВАЖНО: НЕ ОГРАНИЧИВАЕМ уровень доверия - используем РОВНО ТО, ЧТО РАССЧИТАНО
                     self.ax.fill_between(forecast_dates, lower_bound, upper_bound, 
                                     alpha=0.2, 
                                     color=ModernTheme.COLORS['success'],
                                     label=f'Доверительный интервал ±{uncertainty_pct:.1f}%')
                 
-                # Обновляем информацию о прогнозе
                 total_forecast = sum(pred['predicted_sales'] for pred in forecasts)
                 if forecasts and 'confidence_interval' in forecasts[0]:
                     avg_uncertainty = np.mean([pred['confidence_interval']['uncertainty_pct'] for pred in forecasts])
@@ -232,8 +228,7 @@ class SalesForecastApp:
         """Обновляет график статистики с ограничением до 30 дней"""
         if self.processed_data is not None and not self.processed_data.empty:
             self.stats_ax.clear()
-            
-            # Ограничиваем данные для графика статистики
+
             historical_data, _ = self.get_chart_data(historical_days=30)
             
             if not historical_data.empty:
@@ -243,7 +238,6 @@ class SalesForecastApp:
                 self.stats_ax.plot(dates, sales, marker='o', linewidth=2.5, 
                                 color=ModernTheme.COLORS['primary'], markersize=4, alpha=0.8)
                 
-                # Добавляем скользящее среднее
                 if len(sales) >= 7:
                     rolling_mean = sales.rolling(window=7).mean()
                     self.stats_ax.plot(dates, rolling_mean, linewidth=2, 
@@ -441,7 +435,6 @@ class SalesForecastApp:
         ]
 
         for label, key, default, color, row, col in metrics_data:
-            # УМЕНЬШИЛИ ширину до 120 и убрали grid_propagate(False)
             metric_card = ttk.Frame(metrics_frame, style='Card.TFrame', height=100)
             metric_card.grid(row=row, column=col, padx=5, pady=10, sticky="nsew")
             
@@ -613,13 +606,11 @@ class SalesForecastApp:
                 
         def train_and_predict():
             try:
-                # Используем все данные для обучения
                 session_data = {
                     'processed_data': self.processed_data.to_dict('records'),
                     'model_accuracy': self.model_accuracy
                 }
                 
-                # РАСШИРЕННАЯ ОТЛАДОЧНАЯ ИНФОРМАЦИЯ
                 self.logger.info("=" * 50)
                 self.logger.info("НАЧАЛО ПРОГНОЗИРОВАНИЯ")
                 self.logger.info(f"Размер обучающих данных: {len(self.processed_data)}")
@@ -634,7 +625,6 @@ class SalesForecastApp:
                     self.logger.info(f"Последние 7 дней: {last_7_days['total_sales'].mean():.0f} в среднем")
                     self.logger.info(f"Тренд последних 7 дней: {self._calculate_trend(last_7_days['total_sales']):.2f}%")
                 
-                # Конвертируем даты в строки для сериализации
                 for item in session_data['processed_data']:
                     if hasattr(item['date'], 'strftime'):
                         item['date'] = item['date'].strftime('%Y-%m-%d')
@@ -675,14 +665,12 @@ class SalesForecastApp:
                     self.model_accuracy = []
                 self.model_accuracy.append(model_info)
 
-                # АНАЛИЗ РЕЗУЛЬТАТОВ ПРОГНОЗА
                 self.logger.info("РЕЗУЛЬТАТЫ ПРОГНОЗА:")
                 pred_values = [p['predicted_sales'] for p in predictions]
                 self.logger.info(f"Прогнозируемые значения: {[f'{v:.0f}' for v in pred_values]}")
                 self.logger.info(f"Средний прогноз: {np.mean(pred_values):.0f}")
                 self.logger.info(f"Диапазон прогноза: {min(pred_values):.0f} - {max(pred_values):.0f}")
 
-                # В методе run_forecast, после этого блока:
                 if predictions and not self.processed_data.empty:
                     historical_30_days = self.processed_data.tail(30)
                     hist_stats = {

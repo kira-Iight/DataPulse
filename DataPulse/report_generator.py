@@ -34,10 +34,8 @@ class ReportGenerator:
             # Конвертируем даты
             df['date'] = pd.to_datetime(df['date'])
             
-            # Вычисляем статистику по ВСЕМ данным (не ограничиваем)
             stats = self._calculate_sales_statistics(df)
             
-            # Создаем график по ВСЕМ данным
             plot_base64 = self._create_sales_plot(df, stats)
             if not plot_base64:
                 return None
@@ -168,7 +166,7 @@ class ReportGenerator:
             return 0.0
         
         daily_growth = sales_data.pct_change().dropna()
-        return float(daily_growth.mean() * 100)  # в процентах
+        return float(daily_growth.mean() * 100)  
 
     def _calculate_forecast_statistics(self, forecast_results):
         """Вычисляет статистику прогноза"""
