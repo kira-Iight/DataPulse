@@ -10469,3 +10469,30 @@
 2025-11-25 20:16:50 - fontTools.subset - INFO - name pruned
 2025-11-25 20:16:54 - __main__ - INFO - Полный отчет сохранен: /Users/nayeon/Downloads/3.pdf
 2025-11-29 00:08:31 - root - INFO - Система логирования инициализирована
+2025-11-29 02:47:41 - root - INFO - Система логирования инициализирована
+2025-11-29 02:48:31 - data_manager - INFO - Загрузка данных из /Users/nayeon/Documents/GitHub/DataPulse/smooth_sales_data_40_days.csv
+2025-11-29 02:48:31 - data_manager - ERROR - Ошибка загрузки данных: Missing column provided to 'parse_dates': 'date'
+2025-11-29 02:48:31 - __main__ - ERROR - Ошибка при загрузке файла: Missing column provided to 'parse_dates': 'date'
+2025-11-29 02:50:41 - data_manager - INFO - Загрузка данных из /Users/nayeon/Documents/GitHub/DataPulse/smooth_sales_data_40_days.csv
+2025-11-29 02:50:41 - data_manager - WARNING - Найдено 3 дубликатов
+2025-11-29 02:50:41 - data_manager - INFO - Успешно загружено 43 записей
+2025-11-29 02:50:41 - data_manager - INFO - Начало обработки данных
+2025-11-29 02:50:41 - data_manager - INFO - Удалено дубликатов и пропусков: 3
+2025-11-29 02:50:41 - data_manager - INFO - Валидация данных пройдена успешно
+2025-11-29 02:50:41 - data_manager - INFO - Обработка завершена. Итоговых записей: 40
+2025-11-29 02:53:10 - data_manager - INFO - Загрузка данных из /Users/nayeon/Documents/GitHub/DataPulse/smooth_sales_data_40_days.csv
+2025-11-29 02:53:10 - data_manager - ERROR - Ошибка загрузки данных: Колонка 'date' должна содержать даты
+2025-11-29 02:53:10 - __main__ - ERROR - Ошибка при загрузке файла: Колонка 'date' должна содержать даты
+2025-11-29 02:56:22 - data_manager - INFO - Загрузка данных из /Users/nayeon/Documents/GitHub/DataPulse/smooth_sales_data_40_days.csv
+2025-11-29 02:56:22 - data_manager - ERROR - Ошибка загрузки данных: Колонка 'date' должна содержать даты
+2025-11-29 02:56:22 - __main__ - ERROR - Ошибка при загрузке файла: Колонка 'date' должна содержать даты
+2025-11-29 02:56:37 - data_manager - INFO - Загрузка данных из /Users/nayeon/Documents/GitHub/DataPulse/smooth_sales_data_40_days.csv
+2025-11-29 02:56:37 - data_manager - INFO - Успешно загружено 4 записей
+2025-11-29 02:56:37 - data_manager - INFO - Начало обработки данных
+2025-11-29 02:56:37 - data_manager - INFO - Валидация данных пройдена успешно
+2025-11-29 02:56:37 - data_manager - INFO - Обработка завершена. Итоговых записей: 4
+2025-11-29 03:06:03 - data_manager - INFO - Загрузка данных из /Users/nayeon/Documents/GitHub/DataPulse/smooth_sales_data_40_days.csv
+2025-11-29 03:06:03 - data_manager - INFO - Успешно загружено 4 записей
+2025-11-29 03:06:03 - data_manager - INFO - Начало обработки данных
+2025-11-29 03:06:03 - data_manager - INFO - Валидация данных пройдена успешно
+2025-11-29 03:06:03 - data_manager - INFO - Обработка завершена. Итоговых записей: 4
