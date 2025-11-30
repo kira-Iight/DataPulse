@@ -903,6 +903,11 @@ class SalesForecastApp:
             messagebox.showwarning("Предупреждение", "Нет данных для генерации отчета!")
             return
         
+        # Добавляем проверку на наличие результатов прогнозирования
+        if self.forecast_results is None:
+            messagebox.showwarning("Предупреждение", "Сначала выполните прогнозирование!")
+            return
+        
         try:
             session_data = {
                 'processed_data': self.processed_data.to_dict('records'),
@@ -936,6 +941,7 @@ class SalesForecastApp:
             error_msg = f"Ошибка при генерации полного отчета: {str(e)}"
             self.logger.error(error_msg)
             messagebox.showerror("Ошибка", error_msg)
+
 
 def main():
     """Основная функция приложения"""
