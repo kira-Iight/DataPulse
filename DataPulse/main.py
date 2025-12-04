@@ -9,17 +9,13 @@ from datetime import datetime
 import threading
 import logging
 import numpy as np
-
-# Импорт модулей приложения
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from config import AppConfig, DataValidationRules
 from data_manager import DataManager
 from ml_engine import RidgeRegressionEngine
 from logging_config import setup_logging
 from report_generator import ReportGenerator
-
-# Инициализация системы логирования
-setup_logging()
+setup_logging() # Инициализация системы логирования
 
 class ModernTheme:
     """Класс для хранения цветовой схемы и шрифтов приложения"""
@@ -45,14 +41,11 @@ class SalesForecastApp:
         self.report_generator = ReportGenerator()
         self.logger = logging.getLogger(__name__)
         
-        # Попытка установки иконки приложения
-        try:
+        try: # Попытка установки иконки приложения
             self.root.iconbitmap('icon.ico')
         except:
             pass  # Если иконка не найдена, продолжаем без нее
-        
-        # Настройка стилей и создание интерфейса
-        self.setup_styles()
+        self.setup_styles() # Настройка стилей и создание интерфейса
         
         # Инициализация переменных для хранения данных
         self.raw_data = None          # Исходные данные из CSV
@@ -60,9 +53,7 @@ class SalesForecastApp:
         self.forecast_results = None  # Результаты прогнозирования
         self.model_accuracy = []      # Метрики точности модели
         self.model_comparison_results = None  # Результаты сравнения моделей
-        
-        # Создание элементов интерфейса
-        self.create_widgets()
+        self.create_widgets() # Создание элементов интерфейса
                 
     def setup_styles(self):
         """Настройка визуальных стилей для элементов интерфейса"""
@@ -127,14 +118,11 @@ class SalesForecastApp:
         header_frame.pack(fill=tk.X, pady=(0, 20))
 
         # Название приложения
-        title_label = ttk.Label(header_frame, 
-                 text="DataPulse",
-                 style='Title.TLabel')
+        title_label = ttk.Label(header_frame, text="DataPulse", style='Title.TLabel')
         title_label.pack(side=tk.LEFT)
         
         # Подзаголовок (пока пустой, можно заполнить позже)
-        subtitle_label = ttk.Label(header_frame, 
-                 font=ModernTheme.FONTS['subtitle'])
+        subtitle_label = ttk.Label(header_frame, font=ModernTheme.FONTS['subtitle'])
         subtitle_label.pack(side=tk.LEFT, padx=(10, 0))
 
         # Основная область контента
@@ -206,7 +194,6 @@ class SalesForecastApp:
                 if 'confidence_interval' in forecasts[0]:
                     upper_bound = [pred['confidence_interval']['upper'] for pred in forecasts]
                     lower_bound = [pred['confidence_interval']['lower'] for pred in forecasts]
-                    
                     uncertainty_pct = forecasts[0]['confidence_interval']['uncertainty_pct']
                     confidence_level = forecasts[0]['confidence_interval']['confidence_level']
                     
@@ -222,13 +209,9 @@ class SalesForecastApp:
                 # Обновление информации о прогнозе в интерфейсе
                 if forecasts and 'confidence_interval' in forecasts[0]:
                     avg_uncertainty = np.mean([pred['confidence_interval']['uncertainty_pct'] for pred in forecasts])
-                    self.forecast_info_label.config(
-                        text=f"Прогноз: {total_forecast:,.0f} руб. | Неопределенность: ±{avg_uncertainty:.1f}%"
-                    )
+                    self.forecast_info_label.config(text=f"Прогноз: {total_forecast:,.0f} руб. | Неопределенность: ±{avg_uncertainty:.1f}%")
                 else:
-                    self.forecast_info_label.config(
-                        text=f"Прогноз: {total_forecast:,.0f} руб."
-                    )
+                    self.forecast_info_label.config(text=f"Прогноз: {total_forecast:,.0f} руб.")
             
             # Настройка оформления графика
             self.ax.set_title(f"Прогноз продаж на 7 дней с доверительными интервалами", 
@@ -279,9 +262,7 @@ class SalesForecastApp:
         """Создание боковой панели с кнопками управления"""
         
         # Секция управления данными
-        data_label = ttk.Label(parent, 
-                 text="Данные", 
-                 font=ModernTheme.FONTS['normal'])
+        data_label = ttk.Label(parent, text="Данные", font=ModernTheme.FONTS['normal'])
         data_label.pack(anchor=tk.W, padx=20, pady=(10, 5))
         
         # Кнопка загрузки CSV файла
@@ -328,9 +309,7 @@ class SalesForecastApp:
                   command=self.generate_forecast_report)
         forecast_report_button.pack(fill=tk.X, padx=20, pady=2)
         
-        full_report_button = ttk.Button(parent, 
-                  text="Полный отчет", 
-                  command=self.generate_full_report)
+        full_report_button = ttk.Button(parent, text="Полный отчет", command=self.generate_full_report)
         full_report_button.pack(fill=tk.X, padx=20, pady=2)
         
     def create_main_area(self, parent):
@@ -342,10 +321,8 @@ class SalesForecastApp:
         # Создание вкладок
         self.data_frame = ttk.Frame(self.notebook, padding=15)
         self.notebook.add(self.data_frame, text="Данные")
-        
         self.forecast_frame = ttk.Frame(self.notebook, padding=15)
         self.notebook.add(self.forecast_frame, text="Прогноз")
-        
         self.stats_frame = ttk.Frame(self.notebook, padding=15)
         self.notebook.add(self.stats_frame, text="Статистика")
         
@@ -402,15 +379,11 @@ class SalesForecastApp:
         header = ttk.Frame(self.forecast_frame)
         header.pack(fill=tk.X, pady=(0, 15))
         
-        forecast_title = ttk.Label(header, 
-                 text="Прогноз продаж на 7 дней", 
-                 style='Title.TLabel')
+        forecast_title = ttk.Label(header, text="Прогноз продаж на 7 дней", style='Title.TLabel')
         forecast_title.pack(side=tk.LEFT)
         
         # Метка для отображения информации о прогнозе
-        self.forecast_info_label = ttk.Label(header, 
-                                           text="Прогноз не выполнен", 
-                                           style='Title.TLabel')
+        self.forecast_info_label = ttk.Label(header, text="Прогноз не выполнен", style='Title.TLabel')
         self.forecast_info_label.pack(side=tk.RIGHT)
         
         # Контейнер для графика
@@ -436,9 +409,7 @@ class SalesForecastApp:
     def create_stats_tab(self):
         """Создание вкладки со статистикой"""
         # Заголовок вкладки
-        stats_title = ttk.Label(self.stats_frame, 
-                 text="Статистика данных", 
-                 style='Title.TLabel')
+        stats_title = ttk.Label(self.stats_frame, text="Статистика данных", style='Title.TLabel')
         stats_title.pack(anchor=tk.W, pady=(0, 15))
         
         # Фрейм для метрик
@@ -470,15 +441,11 @@ class SalesForecastApp:
             metric_card.grid(row=row, column=col, padx=5, pady=10, sticky="nsew")
             
             # Метка названия метрики
-            label_widget = ttk.Label(metric_card, 
-                    text=label, 
-                    font=ModernTheme.FONTS['small'])
+            label_widget = ttk.Label(metric_card, text=label, font=ModernTheme.FONTS['small'])
             label_widget.pack(pady=(15, 5))
             
             # Метка значения метрики
-            value_label = ttk.Label(metric_card, 
-                                text=default, 
-                                font=ModernTheme.FONTS['metric'])
+            value_label = ttk.Label(metric_card, text=default, font=ModernTheme.FONTS['metric'])
             value_label.pack(pady=(0, 15))
             
             # Сохранение ссылки на метку значения
@@ -530,8 +497,7 @@ class SalesForecastApp:
                 success_msg = f"Файл загружен успешно! Обработано {len(self.processed_data)} записей"
                 messagebox.showinfo("Успех", success_msg)
                 
-            except Exception as e:
-                # Обработка ошибок при загрузке
+            except Exception as e: # Обработка ошибок при загрузке
                 error_msg = f"Ошибка при загрузке файла: {str(e)}"
                 self.logger.error(error_msg)
                 messagebox.showerror("Ошибка", error_msg)
@@ -661,8 +627,7 @@ class SalesForecastApp:
                 
         def train_and_predict():
             """Функция для обучения модели и прогнозирования в отдельном потоке"""
-            try:
-                # Подготовка данных для сессии
+            try: # Подготовка данных для сессии
                 session_data = {
                     'processed_data': self.processed_data.to_dict('records'),
                     'model_accuracy': self.model_accuracy
@@ -814,14 +779,7 @@ class SalesForecastApp:
         thread.start()
 
     def _calculate_trend(self, sales_data):
-        """Вычисление процентного тренда данных продаж
-        
-        Args:
-            sales_data: Series с данными продаж
-        
-        Returns:
-            Процент изменения от начала к концу периода
-        """
+        """Вычисление процентного тренда данных продаж"""
         try:
             # Для расчета тренда нужно минимум 2 точки
             if len(sales_data) < 2:
@@ -947,8 +905,7 @@ class SalesForecastApp:
             else:
                 messagebox.showerror("Ошибка", "Не удалось сгенерировать отчет")
                 
-        except Exception as e:
-            # Обработка ошибок генерации отчета
+        except Exception as e:# Обработка ошибок генерации отчета
             error_msg = f"Ошибка при генерации отчета: {str(e)}"
             self.logger.error(error_msg)
             messagebox.showerror("Ошибка", error_msg)
@@ -987,8 +944,7 @@ class SalesForecastApp:
             else:
                 messagebox.showerror("Ошибка", "Не удалось сгенерировать отчет")
                 
-        except Exception as e:
-            # Обработка ошибок генерации отчета
+        except Exception as e: # Обработка ошибок генерации отчета
             error_msg = f"Ошибка при генерации отчета по прогнозам: {str(e)}"
             self.logger.error(error_msg)
             messagebox.showerror("Ошибка", error_msg)
@@ -1005,8 +961,7 @@ class SalesForecastApp:
             messagebox.showwarning("Предупреждение", "Сначала выполните прогнозирование!")
             return
         
-        try:
-            # Подготовка всех данных для отчета
+        try: # Подготовка всех данных для отчета
             session_data = {
                 'processed_data': self.processed_data.to_dict('records'),
                 'forecast_results': self.forecast_results or [],
@@ -1038,21 +993,18 @@ class SalesForecastApp:
             else:
                 messagebox.showerror("Ошибка", "Не удалось сгенерировать отчет")
                 
-        except Exception as e:
-            # Обработка ошибок генерации отчета
+        except Exception as e: # Обработка ошибок генерации отчета
             error_msg = f"Ошибка при генерации полного отчета: {str(e)}"
             self.logger.error(error_msg)
             messagebox.showerror("Ошибка", error_msg)
 
 def main():
     """Основная функция запуска приложения"""
-    try:
-        # Создание главного окна и запуск приложения
+    try: # Создание главного окна и запуск приложения
         root = tk.Tk()
         app = SalesForecastApp(root)
         root.mainloop()
-    except Exception as e:
-        # Обработка критических ошибок приложения
+    except Exception as e: # Обработка критических ошибок приложения
         logging.error(f"Критическая ошибка приложения: {str(e)}")
         messagebox.showerror("Критическая ошибка", f"Приложение завершилось с ошибкой:\n{str(e)}")
 
