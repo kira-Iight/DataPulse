@@ -74,15 +74,12 @@ class RidgeRegressionEngine:
             test_size = 7  # 7 дней для тестирования (неделя)
             total_size = len(X)
 
-            # Стратегия: если данных много (>30), используем последние 30 дней
             if total_size > 30:
                 train_size = 30 - test_size
-                # Последние 30 дней минус 7 тестовых = 23 обучающих
                 X_train = X.iloc[-(30):-test_size]
                 y_train = y.iloc[-(30):-test_size]
                 self.logger.info(f"Используются последние {len(X_train)} дней для обучения")
             else:
-                # Если данных мало, используем все кроме последних 7 дней
                 X_train = X.iloc[:-test_size]
                 y_train = y.iloc[:-test_size]
                 self.logger.info(f"Используются все {len(X_train)} дней для обучения (меньше 30)")

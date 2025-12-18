@@ -25,10 +25,10 @@ class AdvancedFeatureEngineer:
         df = df.copy()
         
         # Последовательное создание различных типов признаков
-        df = self._create_basic_features(df)      # Базовые временные признаки
-        df = self._create_temporal_features(df)   # Расширенные временные признаки
-        df = self._create_seasonal_features(df)   # Сезонные и циклические признаки
-        df = self._create_calendar_features(df)   # Календарные признаки (праздники)
+        df = self._create_basic_features(df)  # Базовые временные признаки
+        df = self._create_temporal_features(df)  # Расширенные временные признаки
+        df = self._create_seasonal_features(df) # Сезонные и циклические признаки
+        df = self._create_calendar_features(df)# Календарные признаки (праздники)
         df = self._create_statistical_features(df) # Статистические признаки
         
         return df
@@ -41,8 +41,8 @@ class AdvancedFeatureEngineer:
         
         # Извлечение базовых компонентов даты
         df['day_of_week'] = df['date'].dt.dayofweek  # День недели (0=понедельник)
-        df['month'] = df['date'].dt.month            # Месяц (1-12)
-        df['year'] = df['date'].dt.year              # Год
+        df['month'] = df['date'].dt.month   # Месяц (1-12)
+        df['year'] = df['date'].dt.year  # Год
         
         return df
     
@@ -58,10 +58,10 @@ class AdvancedFeatureEngineer:
         df['week_of_year'] = df['date'].dt.isocalendar().week
         
         # Флаги для специальных дней
-        df['is_month_start'] = df['date'].dt.is_month_start.astype(int)     # Первый день месяца
-        df['is_month_end'] = df['date'].dt.is_month_end.astype(int)         # Последний день месяца
+        df['is_month_start'] = df['date'].dt.is_month_start.astype(int)  # Первый день месяца
+        df['is_month_end'] = df['date'].dt.is_month_end.astype(int)   # Последний день месяца
         df['is_quarter_start'] = df['date'].dt.is_quarter_start.astype(int) # Первый день квартала
-        df['is_quarter_end'] = df['date'].dt.is_quarter_end.astype(int)     # Последний день квартала
+        df['is_quarter_end'] = df['date'].dt.is_quarter_end.astype(int)  # Последний день квартала
         
         return df
     
@@ -149,13 +149,13 @@ class AdvancedFeatureEngineer:
             holidays.extend([
                 f"{year}-01-01", f"{year}-01-02", f"{year}-01-03",  # Новогодние каникулы
                 f"{year}-01-04", f"{year}-01-05", f"{year}-01-06", 
-                f"{year}-01-07", f"{year}-01-08",                    # Рождество
-                f"{year}-02-23",                                     # День защитника Отечества
-                f"{year}-03-08",                                     # Международный женский день
-                f"{year}-05-01",                                     # Праздник Весны и Труда
-                f"{year}-05-09",                                     # День Победы
-                f"{year}-06-12",                                     # День России
-                f"{year}-11-04"                                      # День народного единства
+                f"{year}-01-07", f"{year}-01-08",  # Рождество
+                f"{year}-02-23",   # День защитника Отечества
+                f"{year}-03-08",   # Международный женский день
+                f"{year}-05-01",   # Праздник Весны и Труда
+                f"{year}-05-09",  # День Победы
+                f"{year}-06-12",  # День России
+                f"{year}-11-04"  # День народного единства
             ])
         
         # Преобразование строк в объекты datetime.date
@@ -167,10 +167,10 @@ class DataManager:
     
     def __init__(self):
         """Инициализация менеджера данных."""
-        self.logger = logging.getLogger(__name__)           # Логгер для отслеживания операций
-        self.validation_rules = DataValidationRules()       # Правила валидации данных
-        self.feature_engineer = AdvancedFeatureEngineer()   # Инженер признаков
-        self.config = AppConfig()                           # Конфигурация приложения
+        self.logger = logging.getLogger(__name__) # Логгер для отслеживания операций
+        self.validation_rules = DataValidationRules() # Правила валидации данных
+        self.feature_engineer = AdvancedFeatureEngineer() # Инженер признаков
+        self.config = AppConfig()  # Конфигурация приложения
     
     def load_data_from_csv(self, file_path: str) -> pd.DataFrame:
         """Загрузка данных из CSV файла с полной валидацией."""
@@ -288,12 +288,12 @@ class DataManager:
         sales_data = df['total_sales']
         
         return {
-            'total_records': len(df),                       # Общее количество записей
-            'total_sales': float(sales_data.sum()),         # Суммарная выручка за период
-            'avg_daily': float(sales_data.mean()),          # Средняя дневная выручка
-            'max_sales': float(sales_data.max()),           # Максимальная дневная выручка
-            'min_sales': float(sales_data.min()),           # Минимальная дневная выручка
-            'std_sales': float(sales_data.std()),           # Стандартное отклонение выручки
+            'total_records': len(df),  # Общее количество записей
+            'total_sales': float(sales_data.sum()), # Суммарная выручка за период
+            'avg_daily': float(sales_data.mean()),  # Средняя дневная выручка
+            'max_sales': float(sales_data.max()), # Максимальная дневная выручка
+            'min_sales': float(sales_data.min()),  # Минимальная дневная выручка
+            'std_sales': float(sales_data.std()), # Стандартное отклонение выручки
             
             # Информация о периоде данных
             'date_range': {

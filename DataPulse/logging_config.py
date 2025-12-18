@@ -11,11 +11,8 @@ def setup_logging(logs_dir="logs", app_name="sales_forecast"):
     
     try:
         # Создание директории для логов (если не существует)
-        # exist_ok=True предотвращает ошибку если директория уже существует
         os.makedirs(logs_dir, exist_ok=True)
-        
-        # Создание форматтера для сообщений логов
-        # Формат: ВРЕМЯ - ИМЯ_ЛОГГЕРА - УРОВЕНЬ - СООБЩЕНИЕ
+
         formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S'  # Формат даты: ГГГГ-ММ-ДД ЧЧ:ММ:СС

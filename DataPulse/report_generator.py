@@ -12,8 +12,6 @@ from io import BytesIO
 import logging
 
 class ReportGenerator:
-    """Генератор отчетов - соответствует диаграмме классов"""
-    
     def __init__(self):
         self.logger = logging.getLogger(__name__)
     
@@ -61,7 +59,6 @@ class ReportGenerator:
                 self.logger.warning("Нет данных прогноза для отчета")
                 return None
             
-            # Ограничиваем исторические данные последними 60 днями (вместо 30)
             limited_historical = self._get_limited_historical_data(processed_data, days=60)
             
             # Получаем информацию о модели
@@ -90,7 +87,6 @@ class ReportGenerator:
                 self.logger.warning("Нет данных для полного отчета")
                 return None
             
-            # Ограничиваем исторические данные последними 60 днями
             limited_historical = self._get_limited_historical_data(processed_data, days=60)
             
             # Статистика по полным историческим данным
@@ -403,7 +399,7 @@ class ReportGenerator:
                         date_parsed = datetime.datetime.strptime(date_obj[:10], '%Y-%m-%d')
                         return date_parsed.strftime('%d.%m.%Y')
                     except ValueError:
-                        return date_obj[:10]  # Возвращаем как есть
+                        return date_obj[:10]  
                 return str(date_obj)
             else:
                 return str(date_obj)
